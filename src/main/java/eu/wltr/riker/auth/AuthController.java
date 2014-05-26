@@ -15,7 +15,6 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.apache.oltu.oauth2.common.message.types.ResponseType;
 import org.apache.oltu.oauth2.jwt.JWT;
-import org.apache.oltu.openidconnect.client.response.OpenIdConnectResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.wltr.riker.auth.bo.AuthBo;
+import eu.wltr.riker.auth.openidconnect.OpenIdConnectResponse;
 import eu.wltr.riker.auth.pojo.Login.Provider;
 import eu.wltr.riker.auth.pojo.OAuthCredentials;
 import eu.wltr.riker.auth.pojo.Session;
