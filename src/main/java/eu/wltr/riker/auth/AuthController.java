@@ -33,7 +33,7 @@ import eu.wltr.riker.meta.MetaBo;
 
 @Controller
 @Scope("request")
-@RequestMapping("login/oauth/")
+@RequestMapping("login/{providerName}/")
 public class AuthController {
 
 	@Autowired
@@ -50,15 +50,13 @@ public class AuthController {
 
 	}
 
-	private StringBuilder getBaseUri() {
-		return new StringBuilder()
-				.append(request.getScheme())
-				.append("://")
-				.append(request.getServerName())
-				.append(":")
-				.append(request.getServerPort())
-				.append("/");
-
+	private Cookie createCookie(String name, String value) {
+		Cookie c = new Cookie(name, value);
+		c.setPath("/");
+		c.setMaxAge(3600);
+	
+		return c;
+	
 	}
 
 	private OAuthCredentials.Provider getProvider(String name) {
@@ -68,31 +66,30 @@ public class AuthController {
 	}
 
 	private String getSuccessUri() {
-		return getBaseUri().toString();
+		return "/";
 
 	}
 
-	private StringBuilder getControllerUri() {
-		return getBaseUri().append("api/login/oauth/");
-	}
-
-	private String getAuthorizeUri(String provider) {
-		return getControllerUri().append("authorize/")
-				.append(provider).append("/").toString();
-
-	}
-
-	private String getCallbackUri(String provider) {
-		return getControllerUri().append("callback/")
-				.append(provider).append("/").toString();
+	private String getCallbackUri(String providerName) {
+		return new StringBuilder()
+				.append(request.getScheme())
+				.append("://")
+				.append(request.getServerName())
+				.append(":")
+				.append(request.getServerPort())
+				.append("/api/login/")
+				.append(providerName)
+				.append("/callback/")
+				.toString();
 
 	}
 
-	@RequestMapping("/{providerName}/")
+	@RequestMapping("/")
 	public String index(
 			@PathVariable String providerName,
 			@CookieValue(value = "session_id", required = false) String sid,
-			@CookieValue(value = "session_secret", required = false) String secret) {
+			@CookieValue(value = "session_secret", required = false) String secret)
+			throws OAuthSystemException {
 
 		User user = bo.getUserBySession(sid);
 		Session session = bo.getSession(user, sid);
@@ -100,14 +97,6 @@ public class AuthController {
 		if (bo.verifySession(session, secret))
 			return redirect(getSuccessUri());
 
-		else
-			return redirect(getAuthorizeUri(providerName));
-
-	}
-
-	@RequestMapping("/authorize/{providerName}/")
-	public String getAuthorize(@PathVariable String providerName)
-			throws OAuthSystemException {
 		OAuthCredentials.Provider provider = getProvider(providerName);
 
 		OAuthClientRequest request = OAuthClientRequest
@@ -123,7 +112,7 @@ public class AuthController {
 
 	}
 
-	@RequestMapping("/callback/{providerName}/")
+	@RequestMapping("/callback/")
 	public String getCallback(
 			@PathVariable String providerName,
 			HttpServletRequest request,
@@ -164,15 +153,6 @@ public class AuthController {
 		response.addCookie(createCookie("session_secret", secret));
 
 		return redirect(getSuccessUri());
-
-	}
-
-	private Cookie createCookie(String name, String value) {
-		Cookie c = new Cookie(name, value);
-		c.setPath("/");
-		c.setMaxAge(3600);
-
-		return c;
 
 	}
 
