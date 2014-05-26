@@ -7,8 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import eu.wltr.riker.auth.bo.AuthBo;
 import eu.wltr.riker.auth.pojo.Session;
@@ -16,7 +15,7 @@ import eu.wltr.riker.auth.pojo.User;
 
 
 @Service
-public class AuthInterceptor implements HandlerInterceptor {
+public class AuthInterceptor extends HandlerInterceptorAdapter {
 
 	private static final String NAME_SID = "session_id";
 	private static final String NAME_SECRET = "session_secret";
@@ -27,6 +26,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
+
 		String uri = request.getRequestURI();
 
 		if (!uri.startsWith("/api/") || uri.startsWith("/api/login/"))
@@ -59,18 +59,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 		}
 
-	}
-
-	@Override
-	public void postHandle(HttpServletRequest request,
-			HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception {
-	}
-
-	@Override
-	public void afterCompletion(HttpServletRequest request,
-			HttpServletResponse response, Object handler, Exception ex)
-			throws Exception {
 	}
 
 }
