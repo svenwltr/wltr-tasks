@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import org.bson.types.ObjectId;
 
 
-public class ObjectIdConverter {
+public class ConverterUtils {
 
 	private static char intToChar(int i) {
 		if (i < 36)

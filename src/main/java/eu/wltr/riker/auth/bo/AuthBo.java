@@ -9,13 +9,15 @@ import org.springframework.stereotype.Service;
 
 import com.lambdaworks.crypto.SCryptUtil;
 
-import eu.wltr.riker.ObjectIdConverter;
+import eu.wltr.riker.ConverterUtils;
 import eu.wltr.riker.auth.dto.UserDto;
 import eu.wltr.riker.auth.pojo.Login;
 import eu.wltr.riker.auth.pojo.Login.Provider;
+import eu.wltr.riker.auth.pojo.OAuthProviders;
 import eu.wltr.riker.auth.pojo.Session;
 import eu.wltr.riker.auth.pojo.User;
-import eu.wltr.riker.meta.MetaBo;
+import eu.wltr.riker.meta.MetaDto;
+import eu.wltr.riker.meta.token.TokenBo;
 
 
 @Service
@@ -30,15 +32,17 @@ public class AuthBo {
 	private UserDto userDto;
 
 	@Autowired
-	private MetaBo metaBo;
+	private MetaDto metaDto;
 
+	@Autowired
+	private TokenBo tokenBo;
 
 	public Session getSession(User user, String sid) {
 		if (user == null)
 			return null;
 
 		for (Session session : user.getSessions())
-			if (session.getId().equals(sid))
+			if (session.getToken().equals(sid))
 				return session;
 
 		return null;
@@ -57,7 +61,8 @@ public class AuthBo {
 
 	public User createUser() {
 		User user = new User();
-		user.setName(String.format("User %s", metaBo.nextSequence().getToken()));
+		user.setToken(tokenBo.next());
+		user.setName(String.format("User %s", tokenBo.next()));
 
 		userDto.save(user);
 
@@ -70,25 +75,26 @@ public class AuthBo {
 		login.setProvider(Provider.Google);
 		login.setSubject(subject);
 
-		userDto.addLogin(user.getId(), login);
+		userDto.addLogin(user.getToken(), login);
 
 	}
 
 	public String generateSessionSecret() {
 		BigInteger key = new BigInteger(SECRET_SIZE, new Random());
-		String secret = ObjectIdConverter.integerToString(key);
+		String secret = ConverterUtils.integerToString(key);
 		return secret;
 
 	}
 
 	public Session createSession(User user, String secret) {
-		String hashed = SCryptUtil.scrypt(secret, SESSION_N, SESSION_R, SESSION_P);
+		String hashed = SCryptUtil.scrypt(secret, SESSION_N, SESSION_R,
+				SESSION_P);
 
 		Session session = new Session();
-		session.setId(metaBo.nextSequence().getToken());
+		session.setToken(tokenBo.next());
 		session.setHashed(hashed);
 
-		userDto.addSession(user.getId(), session);
+		userDto.addSession(user.getToken(), session);
 
 		return session;
 
@@ -96,6 +102,17 @@ public class AuthBo {
 
 	public boolean verifySession(Session session, String secret) {
 		return session != null && SCryptUtil.check(secret, session.getHashed());
+
+	}
+
+	public OAuthProviders.Provider getProvider(String name) {
+		OAuthProviders providers = metaDto.get(OAuthProviders.class);
+
+		if (providers == null)
+			return null;
+
+		else
+			return providers.getProviders().get(name);
 
 	}
 

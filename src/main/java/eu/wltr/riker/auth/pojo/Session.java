@@ -1,22 +1,24 @@
 package eu.wltr.riker.auth.pojo;
 
 
+import eu.wltr.riker.meta.token.Token;
+
+
 
 
 public class Session {
 
-
-	private String id;
+	private Token token;
 
 	private String hashed;
 
-	public String getId() {
-		return id;
+	public Token getToken() {
+		return token;
 
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setToken(Token token) {
+		this.token = token;
 
 	}
 

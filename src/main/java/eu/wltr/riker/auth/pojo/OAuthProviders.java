@@ -7,7 +7,7 @@ import java.util.Map;
 import eu.wltr.riker.meta.MetaEntry;
 
 
-public class OAuthCredentials extends MetaEntry {
+public class OAuthProviders extends MetaEntry {
 
 	private Map<String, Provider> providers = new HashMap<>();
 
@@ -24,7 +24,7 @@ public class OAuthCredentials extends MetaEntry {
 
 		public String tokenEndpoint;
 
-		public String AuthorizationEndpoint;
+		public String authorizationEndpoint;
 	
 	}
 

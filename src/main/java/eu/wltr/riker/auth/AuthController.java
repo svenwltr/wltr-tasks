@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import eu.wltr.riker.auth.bo.AuthBo;
 import eu.wltr.riker.auth.openidconnect.OpenIdConnectResponse;
 import eu.wltr.riker.auth.pojo.Login.Provider;
-import eu.wltr.riker.auth.pojo.OAuthCredentials;
+import eu.wltr.riker.auth.pojo.OAuthProviders;
 import eu.wltr.riker.auth.pojo.Session;
 import eu.wltr.riker.auth.pojo.User;
-import eu.wltr.riker.meta.MetaBo;
+import eu.wltr.riker.utils.httperror.Http404NotFound;
 
 
 @Controller
@@ -38,9 +38,6 @@ public class AuthController {
 
 	@Autowired
 	private AuthBo bo;
-
-	@Autowired
-	private MetaBo metaBo;
 
 	@Autowired
 	private HttpServletRequest request;
@@ -54,14 +51,8 @@ public class AuthController {
 		Cookie c = new Cookie(name, value);
 		c.setPath("/");
 		c.setMaxAge(3600);
-	
-		return c;
-	
-	}
 
-	private OAuthCredentials.Provider getProvider(String name) {
-		OAuthCredentials all = metaBo.get(OAuthCredentials.class);
-		return all.getProviders().get(name);
+		return c;
 
 	}
 
@@ -97,10 +88,13 @@ public class AuthController {
 		if (bo.verifySession(session, secret))
 			return redirect(getSuccessUri());
 
-		OAuthCredentials.Provider provider = getProvider(providerName);
+		OAuthProviders.Provider provider = bo.getProvider(providerName);
+		
+		if(provider == null)
+			throw new Http404NotFound("Provider not found.");
 
 		OAuthClientRequest request = OAuthClientRequest
-				.authorizationLocation(provider.AuthorizationEndpoint)
+				.authorizationLocation(provider.authorizationEndpoint)
 				.setClientId(provider.clientId)
 				.setRedirectURI(getCallbackUri(providerName))
 				.setResponseType(ResponseType.CODE.toString())
@@ -118,7 +112,7 @@ public class AuthController {
 			HttpServletRequest request,
 			HttpServletResponse response)
 			throws OAuthProblemException, OAuthSystemException {
-		OAuthCredentials.Provider provider = getProvider(providerName);
+		OAuthProviders.Provider provider = bo.getProvider(providerName);
 
 		OAuthAuthzResponse oar = OAuthAuthzResponse
 				.oauthCodeAuthzResponse(request);
@@ -149,7 +143,8 @@ public class AuthController {
 		String secret = bo.generateSessionSecret();
 		Session session = bo.createSession(user, secret);
 
-		response.addCookie(createCookie("session_id", session.getId()));
+		response.addCookie(createCookie("session_id", session.getToken()
+				.toString()));
 		response.addCookie(createCookie("session_secret", secret));
 
 		return redirect(getSuccessUri());

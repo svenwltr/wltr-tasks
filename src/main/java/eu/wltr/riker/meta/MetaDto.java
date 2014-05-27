@@ -20,15 +20,15 @@ public class MetaDto {
 
 	}
 
-	public <T> T get(Class<T> cls) {
+	public <T extends MetaEntry> T get(Class<T> cls) {
 		String name = cls.getCanonicalName();
-		return collection.findOne("{_class: '#'}", name).as(cls);
+		return collection.findOne("{_class: #}", name).as(cls);
 
 	}
 
-	public <T> void update(T value) {
+	public <T extends MetaEntry> void update(T value) {
 		String name = value.getClass().getCanonicalName();
-		collection.update("{_class: '#'}", name).upsert().with(value);
+		collection.update("{_class: #}", name).upsert().with(value);
 
 	}
 

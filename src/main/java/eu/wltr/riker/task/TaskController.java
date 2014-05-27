@@ -1,15 +1,29 @@
 package eu.wltr.riker.task;
 
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.joda.time.Duration;
 import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import eu.wltr.riker.auth.AuthContext;
 
 
 @RestController
-@RequestMapping("tasks/")
-public class TaskController { 
+@RequestMapping(
+		value = "tasks/",
+		consumes = "application/json",
+		produces = "application/json")
+public class TaskController {
+
+	@Autowired
+	private TaskBo taskBo;
 
 	@RequestMapping("test/")
 	public Task hello() {
@@ -22,6 +36,21 @@ public class TaskController {
 
 		return t;
 
-    }
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	public Task createTask(
+			@RequestBody Task task,
+			HttpServletRequest request,
+			HttpServletResponse response,
+			AuthContext ctx) {
+
+		System.out.println(ctx.getUser().getName());
+
+		taskBo.save(task);
+
+		return task;
+
+	}
 
 }

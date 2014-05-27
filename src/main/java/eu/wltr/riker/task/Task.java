@@ -3,9 +3,17 @@ package eu.wltr.riker.task;
 
 import org.joda.time.Duration;
 import org.joda.time.LocalDate;
+import org.jongo.marshall.jackson.oid.Id;
+
+import eu.wltr.riker.meta.token.Token;
 
 
-public class Task {
+public class Task implements UserScoped {
+
+	@Id
+	private Token token;
+
+	private Token userToken;
 
 	private String title;
 
@@ -14,6 +22,22 @@ public class Task {
 	private Duration intervall;
 
 	private LocalDate lastExecution;
+
+	public Token getToken() {
+		return token;
+	}
+
+	public void setToken(Token token) {
+		this.token = token;
+	}
+
+	public Token getUserToken() {
+		return userToken;
+	}
+
+	public void setUserToken(Token userToken) {
+		this.userToken = userToken;
+	}
 
 	public String getTitle() {
 		return title;

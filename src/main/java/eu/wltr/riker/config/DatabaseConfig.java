@@ -4,12 +4,18 @@ package eu.wltr.riker.config;
 import java.net.UnknownHostException;
 
 import org.jongo.Jongo;
+import org.jongo.Mapper;
+import org.jongo.marshall.jackson.JacksonMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+
+import eu.wltr.riker.meta.token.Token;
+import eu.wltr.riker.meta.token.TokenJacksonModule.TokenDeserializer;
+import eu.wltr.riker.meta.token.TokenJacksonModule.TokenSerializer;
 
 
 @Configuration
@@ -30,8 +36,12 @@ public class DatabaseConfig {
 
 	@Bean
 	public Jongo provideJongo(DB db) {
-		return new Jongo(db);
+		Mapper mapper = new JacksonMapper.Builder()
+				.addSerializer(Token.class, new TokenSerializer())
+				.addDeserializer(Token.class, new TokenDeserializer())
+				.build();
+
+		return new Jongo(db, mapper);
 
 	}
-
 }

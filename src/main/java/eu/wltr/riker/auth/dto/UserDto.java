@@ -1,7 +1,6 @@
 package eu.wltr.riker.auth.dto;
 
 
-import org.bson.types.ObjectId;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import eu.wltr.riker.auth.pojo.Login;
 import eu.wltr.riker.auth.pojo.Login.Provider;
 import eu.wltr.riker.auth.pojo.Session;
 import eu.wltr.riker.auth.pojo.User;
+import eu.wltr.riker.meta.token.Token;
 
 
 @Service
@@ -23,7 +23,7 @@ public class UserDto {
 	@Autowired
 	protected UserDto(Jongo jongo) {
 		this.collection = jongo.getCollection(NAME);
-		this.collection.ensureIndex("{'sessions.id': 1}");
+		this.collection.ensureIndex("{'sessions.token': 1}");
 
 	}
 
@@ -35,7 +35,7 @@ public class UserDto {
 	}
 
 	public User findOneBySessionId(String sid) {
-		return collection.findOne("{sessions: {$elemMatch : {id: #}}}", sid)
+		return collection.findOne("{sessions: {$elemMatch : {token: #}}}", sid)
 				.as(User.class);
 
 	}
@@ -46,13 +46,15 @@ public class UserDto {
 
 	}
 
-	public void addLogin(ObjectId oid, Login login) {
-		collection.update(oid).with("{$push: {'logins': #}}", login);
+	public void addLogin(Token token, Login login) {
+		collection.update("{_id:'#'}", token).with("{$push: {'logins': #}}",
+				login);
 
 	}
 
-	public void addSession(ObjectId oid, Session session) {
-		collection.update(oid).with("{$push: {'sessions': #}}", session);
+	public void addSession(Token token, Session session) {
+		collection.update("{_id:'#'}", token).with("{$push: {'sessions': #}}",
+				session);
 
 	}
 
