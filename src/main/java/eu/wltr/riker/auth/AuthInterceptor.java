@@ -52,7 +52,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			return false;
 
 		} else {
-			AuthContext ctx = new AuthContext(user);
+			AuthContext ctx = new AuthContext(user, session);
 			request.setAttribute(AuthContext.class.getCanonicalName(), ctx);
 
 			return true;

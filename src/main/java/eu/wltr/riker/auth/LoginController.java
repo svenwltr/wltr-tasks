@@ -34,7 +34,7 @@ import eu.wltr.riker.utils.httperror.Http404NotFound;
 @Controller
 @Scope("request")
 @RequestMapping("login/{providerName}/")
-public class AuthController {
+public class LoginController {
 
 	@Autowired
 	private AuthBo bo;
