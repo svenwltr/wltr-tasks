@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MetaDto {
-	
+
 	public static final String NAME = "meta";
 
 	private final MongoCollection collection;
@@ -20,15 +20,16 @@ public class MetaDto {
 
 	}
 
-	public <T extends MetaEntry> T get(Class<T> cls) {
-		String name = cls.getCanonicalName();
-		return collection.findOne("{_class: #}", name).as(cls);
+	public <T> T get(Class<T> cls) {
+		String id = cls.getCanonicalName();
+		T value = collection.findOne("{_id: #}", id).as(cls);
+		return value;
 
 	}
 
-	public <T extends MetaEntry> void update(T value) {
-		String name = value.getClass().getCanonicalName();
-		collection.update("{_class: #}", name).upsert().with(value);
+	public <T> void update(T value) {
+		String id = value.getClass().getCanonicalName();
+		collection.update("{_id: #}", id).upsert().with(value);
 
 	}
 

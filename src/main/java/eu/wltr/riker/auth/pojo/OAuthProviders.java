@@ -4,10 +4,8 @@ package eu.wltr.riker.auth.pojo;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.wltr.riker.meta.MetaEntry;
 
-
-public class OAuthProviders extends MetaEntry {
+public class OAuthProviders {
 
 	private Map<String, Provider> providers = new HashMap<>();
 

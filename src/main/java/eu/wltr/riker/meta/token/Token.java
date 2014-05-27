@@ -1,18 +1,11 @@
 package eu.wltr.riker.meta.token;
 
 
-import java.math.BigInteger;
-
-import org.bson.BasicBSONObject;
-
-import eu.wltr.riker.ConverterUtils;
 
 
-public class Token extends BasicBSONObject {
+public class Token {
 
-	private static final long serialVersionUID = 88737219310594927L;
-
-	private static final String TOKEN_KEY = "token";
+	private String token;
 
 	public Token(String token) {
 		setToken(token);
@@ -20,20 +13,13 @@ public class Token extends BasicBSONObject {
 	}
 
 	public String getToken() {
-		return getString(TOKEN_KEY);
+		return token;
 	
 	}
 
 	public void setToken(String token) {
-		put(TOKEN_KEY, token);
+		this.token = token;
 
-	}
-
-	public void increment() {
-		BigInteger ordinal = ConverterUtils.integerFromString(getToken());
-		ordinal = ordinal.add(BigInteger.ONE);
-		setToken(ConverterUtils.integerToString(ordinal));
-	
 	}
 
 	@Override

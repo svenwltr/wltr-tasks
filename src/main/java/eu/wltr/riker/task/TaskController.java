@@ -45,8 +45,6 @@ public class TaskController {
 			HttpServletResponse response,
 			AuthContext ctx) {
 
-		System.out.println(ctx.getUser().getName());
-
 		taskBo.save(task);
 
 		return task;
