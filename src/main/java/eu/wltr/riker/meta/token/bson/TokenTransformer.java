@@ -1,4 +1,4 @@
-package eu.wltr.riker.meta.token;
+package eu.wltr.riker.meta.token.bson;
 
 
 import javax.annotation.PostConstruct;
@@ -6,6 +6,8 @@ import javax.annotation.PostConstruct;
 import org.bson.BSON;
 import org.bson.Transformer;
 import org.springframework.stereotype.Service;
+
+import eu.wltr.riker.meta.token.Token;
 
 
 @Service

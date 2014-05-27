@@ -6,7 +6,7 @@ import eu.wltr.riker.meta.token.Token;
 
 public interface UserScoped {
 
-	public Token getToken();
+	public Token getId();
 
 	public Token getUserToken();
 

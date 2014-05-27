@@ -13,22 +13,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import eu.wltr.riker.auth.AuthContext;
+import eu.wltr.riker.meta.token.Token;
 
 
 @RestController
 @RequestMapping(
 		value = "tasks/",
-		consumes = "application/json",
 		produces = "application/json")
 public class TaskController {
 
 	@Autowired
 	private TaskBo taskBo;
 
-	@RequestMapping("test/")
+	@RequestMapping("example/")
 	public Task hello() {
 		Task t = new Task();
 
+		t.setId(new Token("foo"));
+		t.setUserToken(new Token("userid"));
 		t.setTitle("Blumen gießen");
 		t.setDescription(".öfasdfsd");
 		t.setIntervall(Duration.standardDays(7));

@@ -14,8 +14,8 @@ import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
 import eu.wltr.riker.meta.token.Token;
-import eu.wltr.riker.meta.token.TokenJacksonModule.TokenDeserializer;
-import eu.wltr.riker.meta.token.TokenJacksonModule.TokenSerializer;
+import eu.wltr.riker.meta.token.jackson.TokenDeserializer;
+import eu.wltr.riker.meta.token.jackson.TokenSerializer;
 
 
 @Configuration
@@ -38,8 +38,7 @@ public class DatabaseConfig {
 	public Jongo provideJongo(DB db) {
 		Mapper mapper = new JacksonMapper.Builder()
 				.addSerializer(Token.class, new TokenSerializer())
-				.addDeserializer(Token.class, new TokenDeserializer())
-				.build();
+				.addDeserializer(Token.class, new TokenDeserializer()).build();
 
 		return new Jongo(db, mapper);
 

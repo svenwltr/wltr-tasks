@@ -17,6 +17,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 import eu.wltr.riker.auth.AuthContextResolver;
 import eu.wltr.riker.auth.AuthInterceptor;
+import eu.wltr.riker.meta.token.jackson.TokenModule;
 
 
 @Configuration
@@ -36,6 +37,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		MappingJackson2HttpMessageConverter jackson;
 		jackson = new MappingJackson2HttpMessageConverter();
 		jackson.getObjectMapper().registerModule(new JodaModule());
+		jackson.getObjectMapper().registerModule(new TokenModule());
 
 		converters.add(jackson);
 
