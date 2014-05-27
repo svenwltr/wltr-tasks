@@ -12,7 +12,7 @@ import eu.wltr.riker.meta.token.Token;
 public class TokenDeserializer extends StdDeserializer<Token> {
 	private static final long serialVersionUID = 5535862534636189872L;
 
-	public TokenDeserializer() {
+	protected TokenDeserializer() {
 		super(Token.class);
 
 	}

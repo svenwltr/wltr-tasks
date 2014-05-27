@@ -9,8 +9,9 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import eu.wltr.riker.meta.token.Token;
 
+
 public class TokenSerializer extends StdSerializer<Token> {
-	public TokenSerializer() {
+	protected TokenSerializer() {
 		super(Token.class);
 
 	}

@@ -10,12 +10,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
-import eu.wltr.riker.meta.token.Token;
-import eu.wltr.riker.meta.token.jackson.TokenDeserializer;
-import eu.wltr.riker.meta.token.jackson.TokenSerializer;
+import eu.wltr.riker.meta.token.jackson.TokenModule;
 
 
 @Configuration
@@ -37,8 +36,9 @@ public class DatabaseConfig {
 	@Bean
 	public Jongo provideJongo(DB db) {
 		Mapper mapper = new JacksonMapper.Builder()
-				.addSerializer(Token.class, new TokenSerializer())
-				.addDeserializer(Token.class, new TokenDeserializer()).build();
+				.registerModule(new JodaModule())
+				.registerModule(new TokenModule())
+				.build();
 
 		return new Jongo(db, mapper);
 

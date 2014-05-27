@@ -2,12 +2,12 @@ package eu.wltr.riker.task;
 
 
 import org.joda.time.Duration;
-import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import eu.wltr.riker.meta.token.Token;
 
 
-public class Task implements UserScoped {
+public class Task {
 
 	private Token _id;
 
@@ -19,7 +19,7 @@ public class Task implements UserScoped {
 
 	private Duration intervall;
 
-	private LocalDate lastExecution;
+	private LocalDateTime lastExecution;
 
 	public Token getId() {
 		return _id;
@@ -61,11 +61,11 @@ public class Task implements UserScoped {
 		this.intervall = intervall;
 	}
 
-	public LocalDate getLastExecution() {
+	public LocalDateTime getLastExecution() {
 		return lastExecution;
 	}
 
-	public void setLastExecution(LocalDate lastExecution) {
+	public void setLastExecution(LocalDateTime lastExecution) {
 		this.lastExecution = lastExecution;
 	}
 
