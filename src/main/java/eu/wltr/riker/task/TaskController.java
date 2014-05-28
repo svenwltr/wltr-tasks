@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import eu.wltr.riker.auth.AuthContext;
 import eu.wltr.riker.meta.token.Token;
+import eu.wltr.riker.utils.httperror.Http400BadRequest;
 
 
 @RestController
@@ -50,6 +51,25 @@ public class TaskController {
 			@RequestBody Task task,
 			HttpServletResponse response,
 			AuthContext ctx) {
+		
+		if (task.getId() != null) {
+			response.addHeader("X-400-REASON", "'id' is forbidden");
+			throw new Http400BadRequest();
+
+		}
+
+		if (task.getTitle() == null || task.getTitle().isEmpty()) {
+			response.addHeader("X-400-REASON", "'title' is required");
+			throw new Http400BadRequest();
+
+		}
+
+		if (task.getInterval() == null) {
+			response.addHeader("X-400-REASON", "'interval' is required");
+			throw new Http400BadRequest();
+
+		}
+
 		taskBo.create(task, ctx);
 
 		response.setStatus(HttpServletResponse.SC_ACCEPTED);
