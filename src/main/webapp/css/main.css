@@ -17,3 +17,8 @@ body {
 #task-list .label {
 	margin-top: 3px;
 }
+
+#task-list .list-group-item {
+	cursor: pointer;
+	
+}
