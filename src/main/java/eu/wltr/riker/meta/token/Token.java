@@ -1,8 +1,5 @@
 package eu.wltr.riker.meta.token;
 
-
-
-
 public class Token {
 
 	private String token;
@@ -14,7 +11,7 @@ public class Token {
 
 	public String getToken() {
 		return token;
-	
+
 	}
 
 	public void setToken(String token) {
@@ -29,11 +26,26 @@ public class Token {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (super.equals(o))
+	public boolean equals(Object obj) {
+		if (this == obj)
 			return true;
 
-		return getToken().equals(o);
+		if (obj == null)
+			return false;
+
+		if (obj instanceof String)
+			return token.equals(obj);
+
+		if (!(obj instanceof Token))
+			return false;
+
+		Token other = (Token) obj;
+		if (token == null) {
+			if (other.token != null)
+				return false;
+		} else if (!token.equals(other.token))
+			return false;
+		return true;
 
 	}
 
