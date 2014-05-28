@@ -47,13 +47,13 @@ public class TaskController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public Task create(
+	public Task upsert(
 			@RequestBody Task task,
 			HttpServletResponse response,
 			AuthContext ctx) {
-		
-		if (task.getId() != null) {
-			response.addHeader("X-400-REASON", "'id' is forbidden");
+
+		if (task.getUserToken() != null) {
+			response.addHeader("X-400-REASON", "'userToken' is forbidden");
 			throw new Http400BadRequest();
 
 		}
@@ -70,12 +70,14 @@ public class TaskController {
 
 		}
 
-		taskBo.create(task, ctx);
+		if (task.getId() == null)
+			taskBo.create(task, ctx);
+		else
+			taskBo.update(task, ctx);
 
 		response.setStatus(HttpServletResponse.SC_ACCEPTED);
 		return task;
 
 	}
-
 
 }

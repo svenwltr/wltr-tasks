@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.wltr.riker.auth.AuthContext;
+import eu.wltr.riker.meta.token.Token;
 
 
 @Service
@@ -30,6 +31,11 @@ public class TaskDto {
 
 	public void save(Task task) {
 		collection.save(task);
+
+	}
+
+	public Task findOne(Token id) {
+		return collection.findOne("{_id: #}", id.toString()).as(Task.class);
 
 	}
 

@@ -36,7 +36,11 @@ function printTasks(tasks) {
 
 		item.$title.text(task.title);
 		item.$description.text(task.description);
-		item.$score.text(Math.round(task.score));
+
+		if (!task.lastExecution)
+			item.$score.html("&infin;");
+		else
+			item.$score.text(Math.round(task.score));
 
 		item.$root.click(function() {
 			clickTask(item, task);
@@ -118,14 +122,14 @@ $(function() {
 		task.title = $('#inputTitle').val();
 		task.description = $('#inputDescription').val();
 		task.interval = parseDuration($('#inputInterval').val());
-		
+
 		$.ajax({
 			url : '/api/tasks/',
 			type : 'POST',
 			contentType : 'application/json',
 			data : JSON.stringify(task)
 		});
-		
+
 	});
 });
 
@@ -176,17 +180,17 @@ function parseDuration(value) {
 			}
 		}
 	}
-	
+
 	var result = 0;
 	result += units.millisecond;
 	result += units.second * 1000;
 	result += units.minute * 1000 * 60;
-	result += units.hour   * 1000 * 60 * 60;
-	result += units.day    * 1000 * 60 * 60 * 24;
-	result += units.week   * 1000 * 60 * 60 * 24 * 7;
-	result += units.month  * 1000 * 60 * 60 * 24 * 30;
-	result += units.year   * 1000 * 60 * 60 * 24 * 365;
-	
+	result += units.hour * 1000 * 60 * 60;
+	result += units.day * 1000 * 60 * 60 * 24;
+	result += units.week * 1000 * 60 * 60 * 24 * 7;
+	result += units.month * 1000 * 60 * 60 * 24 * 30;
+	result += units.year * 1000 * 60 * 60 * 24 * 365;
+
 	return result;
-	
+
 }
