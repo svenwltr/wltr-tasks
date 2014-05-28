@@ -19,6 +19,13 @@ public class TokenDeserializer extends StdDeserializer<Token> {
 
 	public Token deserialize(JsonParser jp, DeserializationContext ctxt)
 			throws IOException, JsonProcessingException {
-		return new Token(jp.getText());
+		String text = jp.getText();
+
+		if (text == null || text.isEmpty())
+			return null;
+
+		return new Token(text);
+
 	}
+
 }
