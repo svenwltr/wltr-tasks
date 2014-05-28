@@ -1,0 +1,19 @@
+body {
+	padding-top: 70px;
+}
+
+#task-list h4 {
+	display: inline;
+	
+}
+
+#task-list p {
+	display: inline;
+	padding-left: 10px;
+	color: #999;
+	
+}
+
+#task-list .label {
+	margin-top: 3px;
+}

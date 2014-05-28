@@ -1,15 +1,59 @@
-<!doctype html>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>wltr Tasks</title>
+
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="css/main.css">
+
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
 </head>
 <body>
-<h1>Index</h1>
 
-<ul>
-<li><a href="/api/login/google/">Login</a></li>
-<li><a href="/api/tasks/">List</a></li>
-</ul>
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">wltr Tasks <sup class="text-danger">alpha</sup></a>
+			</div>
+		</div>
+	</div>
 
+	<div class="container">
+		<div class="col-md-6 col-md-push-6 col-xs-12 col-xs-push-0">
+			<div class="well">
+				<form role="form">
+					<div class="form-group">
+						<label class="sr-only" for="inputTitle">Title</label>
+						<input class="form-control" id="inputTitle" placeholder="Enter title ...">
+					</div>
+					<div class="form-group">
+						<label class="sr-only" for="inputInterval">Interval</label>
+						<input class="form-control" id="inputInterval" placeholder="Enter interval ...">
+					</div>
+					<div class="form-group">
+						<label class="sr-only" for="inputDescription">Description</label>
+						<textarea class="form-control" id="inputDescription" placeholder="Enter description ..."></textarea>
+					</div>
+					<button type="submit" class="btn btn-success btn-block">Save</button>
+				</form>
+			</div>
+		</div>
+		<div class="col-md-6 col-md-pull-6 col-xs-12 col-xs-pull-0">
+			<div class="list-group" id="task-list"></div>
+		</div>
+	</div>
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/2.3.0/es5-shim.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
+	<script src="/js/main.js"></script>
 </body>
 </html>
