@@ -3,8 +3,8 @@ package eu.wltr.riker.task;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,8 +32,8 @@ public class TaskController {
 		t.setUserToken(new Token("userid"));
 		t.setTitle("Blumen gießen");
 		t.setDescription(".öfasdfsd");
-		t.setIntervall(Duration.standardDays(7));
-		t.setLastExecution(LocalDateTime.parse("2014-05-21"));
+		t.setInterval(Duration.standardDays(7));
+		t.setLastExecution(DateTime.parse("2014-05-21"));
 
 		return t;
 

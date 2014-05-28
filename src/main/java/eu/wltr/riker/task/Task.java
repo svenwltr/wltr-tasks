@@ -1,8 +1,8 @@
 package eu.wltr.riker.task;
 
 
+import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.joda.time.LocalDateTime;
 
 import eu.wltr.riker.meta.token.Token;
 
@@ -17,9 +17,9 @@ public class Task {
 
 	private String description;
 
-	private Duration intervall;
+	private Duration interval;
 
-	private LocalDateTime lastExecution;
+	private DateTime lastExecution;
 
 	public Token getId() {
 		return _id;
@@ -53,19 +53,19 @@ public class Task {
 		this.description = description;
 	}
 
-	public Duration getIntervall() {
-		return intervall;
+	public Duration getInterval() {
+		return interval;
 	}
 
-	public void setIntervall(Duration intervall) {
-		this.intervall = intervall;
+	public void setInterval(Duration intervall) {
+		this.interval = intervall;
 	}
 
-	public LocalDateTime getLastExecution() {
+	public DateTime getLastExecution() {
 		return lastExecution;
 	}
 
-	public void setLastExecution(LocalDateTime lastExecution) {
+	public void setLastExecution(DateTime lastExecution) {
 		this.lastExecution = lastExecution;
 	}
 
