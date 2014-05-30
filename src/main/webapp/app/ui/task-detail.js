@@ -16,6 +16,7 @@ define(function(require) {
 			scoreSelector : '[data-bind="score"]',
 			progressBarSelector : '.progress-bar',
 			progressSelector : '.progress',
+			closeSelector : '[data-action="deselect"]',
 		});
 
 		this.deselectTask = function() {
@@ -44,10 +45,19 @@ define(function(require) {
 			this.$node.slideDown();
 			
 		};
+		
+		this.closeClicked = function() {
+			this.trigger(document, 'ui.task.deselect');
+			
+		};
 
 		this.after('initialize', function() {
 			this.on(document, 'ui.task.deselect', this.deselectTask);
 			this.on(document, 'ui.task.select', this.selectTask);
+			
+			this.on('click', {
+				'closeSelector' : this.closeClicked,
+			});
 
 		});
 	}
