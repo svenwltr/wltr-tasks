@@ -11,6 +11,7 @@ define(function(require) {
 
 					data.forEach(function(task) {
 						task.executionDiff = Date.now() - task.lastExecution;
+						task.nextExecution = task.lastExecution + task.interval;
 						if (task.lastExecution)
 							task.score = task.executionDiff / task.interval
 									* 100;

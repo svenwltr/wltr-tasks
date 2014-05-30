@@ -14,6 +14,8 @@ define(function(require) {
 			descriptionSelector : '[data-bind="description"]',
 			intervalSelector : '[data-bind="interval"]',
 			scoreSelector : '[data-bind="score"]',
+			lastExecutionSelector : '[data-bind="last-execution"]',
+			nextExecutionSelector : '[data-bind="next-execution"]',
 			progressBarSelector : '.progress-bar',
 			progressSelector : '.progress',
 			closeSelector : '[data-action="deselect"]',
@@ -28,9 +30,10 @@ define(function(require) {
 
 			this.select('idSelector').text(task.id);
 			this.select('titleSelector').text(task.title);
-			this.select('intervalSelector').text(
-					moment.duration(task.interval).humanize());
+			this.select('intervalSelector').text(moment.duration(task.interval).humanize());
 			this.select('descriptionSelector').text(task.description);
+			this.select('lastExecutionSelector').text(moment(task.lastExecution).fromNow()).attr('title', moment(task.lastExecution).calendar());
+			this.select('nextExecutionSelector').text(moment(task.nextExecution).fromNow()).attr('title', moment(task.nextExecution).calendar());
 
 			if (task.score == Infinity) {
 				this.select('progressSelector').hide();

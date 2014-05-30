@@ -3,3 +3,4 @@
 /.settings/
 /target/
 /.extract/
+*.swp

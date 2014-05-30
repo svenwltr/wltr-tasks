@@ -3,7 +3,7 @@ define(function(require) {
 	require('es5shim/es5-shim.min');
 	require('es5shim/es5-sham.min');
 	require('jquery');
-
+	
 	require('data/auth').attachTo(document);
 	require('data/task').attachTo(document);
 	require('ui/auth').attachTo(document);

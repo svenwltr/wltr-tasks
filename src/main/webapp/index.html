@@ -31,8 +31,20 @@
 					<button type="button" class="close" data-action="deselect">&times;</button>
 					<h3 data-bind="title"></h3>
 					<p data-bind="description"></p>
+					<div class="well well-sm">
+						<dl class="dl-horizontal">
+							<dt>Score</dt>
+							<dd data-bind="score">-</dd>
+							<dt>Interval</dt>
+							<dd data-bind="interval">-</dd>
+							<dt>Last Execution</dt>
+							<dd data-bind="last-execution">-</dd>
+							<dt>Next Execution</dt>
+							<dd data-bind="next-execution">-</dd>
+						</dl>
+					</div>
 					<div class="progress">
-						<div class="progress-bar" role="progressbar" data-bind="score">60%</div>
+						<div class="progress-bar" role="progressbar"></div>
 					</div>
 				</div>
 			</div>

@@ -10,6 +10,7 @@ requirejs.config({
 		es5shim : 'bower_components/es5-shim',
 		jquery : 'bower_components/jquery/dist/jquery',
 		moment : 'bower_components/moment/moment',
+		'moment-lang' : 'bower_components/moment/lang',
 
 	},
 	
