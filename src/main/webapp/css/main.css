@@ -8,14 +8,12 @@ body.loading {
 
 #task-list h4 {
 	display: inline;
-	
 }
 
 #task-list p {
 	display: inline;
 	padding-left: 10px;
 	color: #999;
-	
 }
 
 #task-list .label {
@@ -24,7 +22,6 @@ body.loading {
 
 #task-list .list-group-item {
 	cursor: pointer;
-	
 }
 
 #task-detail .panel-body {
@@ -37,4 +34,12 @@ body.loading {
 
 #task-detail .close {
 	margin-top: -5px;
+}
+
+.noselect {
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 }

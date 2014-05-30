@@ -76,7 +76,7 @@ define(function(require) {
 
 	function createTaskList() {
 		var $list = $('<div>');
-		$list.addClass("list-group");
+		$list.addClass("list-group noselect");
 		return $list;
 
 	}
