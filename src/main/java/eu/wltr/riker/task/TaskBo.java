@@ -22,7 +22,7 @@ public class TaskBo {
 		task.setId(tokenBo.next());
 		task.setUserToken(ctx.getUser().getToken());
 
-		taskDto.save(task);
+		taskDto.create(task);
 
 		return task;
 
@@ -47,7 +47,7 @@ public class TaskBo {
 
 		task.setUserToken(old.getUserToken());
 
-		taskDto.save(task);
+		taskDto.update(task);
 
 	}
 

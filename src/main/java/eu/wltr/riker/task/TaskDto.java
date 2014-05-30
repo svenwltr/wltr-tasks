@@ -29,8 +29,13 @@ public class TaskDto {
 				Task.class);
 	}
 
-	public void save(Task task) {
+	public void create(Task task) {
 		collection.save(task);
+
+	}
+
+	public void update(Task task) {
+		collection.update("{_id: #}", task.getId().toString()).with(task);
 
 	}
 
