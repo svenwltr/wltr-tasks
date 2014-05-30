@@ -59,6 +59,8 @@ define(function(require) {
 			this.on('click', {
 				'submitSelector' : this.submitForm,
 			});
+			
+			this.$node.fadeIn();
 
 		});
 	}

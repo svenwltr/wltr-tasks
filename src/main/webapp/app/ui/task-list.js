@@ -62,6 +62,8 @@ define(function(require) {
 			this.on('click', {
 				itemSelector : this.onItemClick,
 			});
+			
+			this.$node.fadeIn();
 
 		});
 	}
