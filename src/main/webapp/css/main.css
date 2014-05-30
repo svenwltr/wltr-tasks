@@ -2,6 +2,10 @@ body {
 	padding-top: 70px;
 }
 
+body.loading {
+	cursor: wait;
+}
+
 #task-list h4 {
 	display: inline;
 	
@@ -21,4 +25,8 @@ body {
 #task-list .list-group-item {
 	cursor: pointer;
 	
+}
+
+#task-detail h3 {
+	margin-top: 0;
 }

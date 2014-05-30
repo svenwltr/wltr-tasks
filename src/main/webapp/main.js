@@ -1,16 +1,7 @@
 'use strict';
 
 $(function() {
-	$.ajax({
-		url : "/api/session/",
-		complete : function(jqXHR, textStatus) {
-			if (jqXHR.status != 200)
-				document.location = '/login.html';
-			else
-				loadTasks();
-
-		}
-	});
+	
 });
 
 function loadTasks() {

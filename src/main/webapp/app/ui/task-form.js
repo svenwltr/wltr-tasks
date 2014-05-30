@@ -1,0 +1,48 @@
+define(function(require) {
+	var Utils = require('utils');
+	var moment = require('moment');
+	
+	var defineComponent = require('flight/lib/component');
+
+	return defineComponent(form);
+
+	function form() {
+
+		this.defaultAttrs({
+			idSelector : '[name="id"]',
+			titleSelector : '[name="title"]',
+			descriptionSelector : '[name="description"]',
+			intervalSelector : '[name="interval"]',
+			submitSelector : '[type="submit"]',
+		});
+		
+		this.setForm = function(task) {
+			this.select('idSelector').val(task.id);
+			this.select('titleSelector').val(task.title);
+			this.select('intervalSelector').val(moment.duration(task.interval).humanize());
+			this.select('descriptionSelector').val(task.description);
+		};
+
+		this.deselectTask = function() {
+			this.setForm({
+				id : '',
+				title : '',
+				interval : '',
+				description : '',
+			});
+			
+		};
+
+		this.selectTask = function(event, task) {
+			this.setForm(task);
+
+		};
+
+		this.after('initialize', function() {
+			this.on(document, 'ui.task.deselect', this.deselectTask);
+			this.on(document, 'ui.task.select', this.selectTask);
+
+		});
+	}
+
+});
