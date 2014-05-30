@@ -27,6 +27,10 @@ body.loading {
 	
 }
 
+#task-detail .panel-body {
+	padding-bottom: 0;
+}
+
 #task-detail h3 {
 	margin-top: 0;
 }

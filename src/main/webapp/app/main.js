@@ -34,7 +34,7 @@ define(function(require) {
 		};
 		
 		this.onKeyup = function(event) {
-			if(event.keyCode == 27) {
+			if(event.keyCode == 27) { /* ESC */
 				this.trigger('ui.task.deselect');
 			}
 			

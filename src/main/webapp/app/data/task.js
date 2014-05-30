@@ -12,7 +12,8 @@ define(function(require) {
 					data.forEach(function(task) {
 						task.executionDiff = Date.now() - task.lastExecution;
 						if (task.lastExecution)
-							task.score = task.executionDiff / task.interval * 100;
+							task.score = task.executionDiff / task.interval
+									* 100;
 						else
 							task.score = Infinity;
 
@@ -26,8 +27,23 @@ define(function(require) {
 
 		};
 
+		this.saveTask = function(event, task) {
+			var self = this;
+			$.ajax({
+				url : '/api/tasks/',
+				type : 'POST',
+				contentType : 'application/json',
+				data : JSON.stringify(task),
+				success : function() {
+					self.trigger('data.task.requestList');
+				}
+			});
+
+		};
+
 		this.after('initialize', function() {
 			this.on('data.task.requestList', this.requestList);
+			this.on('data.task.save', this.saveTask);
 
 		});
 	}
