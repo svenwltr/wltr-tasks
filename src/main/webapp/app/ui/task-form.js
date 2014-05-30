@@ -31,11 +31,13 @@ define(function(require) {
 				interval : '',
 				description : '',
 			});
+			this.$node.show();
 
 		};
 
 		this.selectTask = function(event, task) {
 			this.setForm(task);
+			this.$node.hide();
 
 		};
 

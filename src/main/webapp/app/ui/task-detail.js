@@ -22,7 +22,7 @@ define(function(require) {
 		});
 
 		this.deselectTask = function() {
-			this.$node.slideUp();
+			this.$node.hide();
 
 		};
 
@@ -45,7 +45,7 @@ define(function(require) {
 
 			}
 
-			this.$node.slideDown();
+			this.$node.show();
 			
 		};
 		
