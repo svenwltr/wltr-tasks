@@ -4,12 +4,15 @@
 	<groupId>eu.wltr.riker</groupId>
 	<artifactId>riker</artifactId>
 	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1</version>
 	<name>Riker</name>
 	<properties>
 		<version.spring>4.0.1.RELEASE</version.spring>
 		<version.jackson>2.3.3</version.jackson>
 		<version.servlet>3.0.1</version.servlet>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -116,4 +119,37 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>runnable-war</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.tomcat.maven</groupId>
+						<artifactId>tomcat7-maven-plugin</artifactId>
+						<version>2.1</version>
+						<executions>
+							<execution>
+								<id>tomcat-run</id>
+								<goals>
+									<goal>exec-war-only</goal>
+								</goals>
+								<phase>package</phase>
+								<configuration>
+									<path>/</path>
+									<attachArtifactClassifier>exec-war</attachArtifactClassifier>
+									<attachArtifactClassifierType>jar</attachArtifactClassifierType>
+									<finalName>${project.artifactId}.jar</finalName>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

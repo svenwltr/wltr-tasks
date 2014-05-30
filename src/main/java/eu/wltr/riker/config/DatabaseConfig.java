@@ -29,7 +29,7 @@ public class DatabaseConfig {
 
 	@Bean
 	public DB provideDb(MongoClient mc) {
-		return mc.getDB("riker-spring");
+		return mc.getDB("riker");
 
 	}
 
