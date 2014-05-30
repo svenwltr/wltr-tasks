@@ -50,7 +50,13 @@ define(function(require) {
 		};
 
 		this.onItemClick = function(event, data) {
-			this.trigger(document, 'ui.task.select', $(data.el).data('task'));
+			var $el = $(data.el);
+			var $mark = $el.data('meta').$mark;
+
+			if ($mark.is(':visible'))
+				this.trigger(document, 'ui.task.deselect');
+			else
+				this.trigger(document, 'ui.task.select', $el.data('task'));
 
 		};
 
@@ -62,7 +68,7 @@ define(function(require) {
 			this.on('click', {
 				itemSelector : this.onItemClick,
 			});
-			
+
 			this.$node.fadeIn();
 
 		});
