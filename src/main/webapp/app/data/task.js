@@ -16,8 +16,6 @@ define(function(require) {
 						tasks.push(new Task(taskData));
 					});
 
-					console.log(tasks);
-
 					parent.trigger('data.task.provideList', {
 						tasks : tasks,
 					});

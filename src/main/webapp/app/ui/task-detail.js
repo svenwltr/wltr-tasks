@@ -39,8 +39,27 @@ define(function(require) {
 			
 		};
 
+		this.update = function(event, data) {
+			var old = this.$node.data('task');
+			if(!old)
+				return;
+
+			var id = old.id;
+			data.tasks.forEach(function(task){
+				console.log(id, task.id);
+				if(id == task.id)
+					this.$node.data('task', task);
+			}, this);
+
+			this.render();
+
+		};
+
 		this.render = function() {
 			var task = this.$node.data('task');
+
+			if(!task)
+				return;
 
 			this.select('idSelector').text(task.id);
 			this.select('titleSelector').text(task.title);
@@ -49,7 +68,7 @@ define(function(require) {
 			this.select('lastExecutionSelector').text(task.getLastExecution().fromNow()).attr('title', task.getLastExecution().calendar());
 			this.select('nextExecutionSelector').text(task.getNextExecution().fromNow()).attr('title', task.getNextExecution().calendar());
 
-			if (task.score == Infinity) {
+			if (task.getScore() == Infinity) {
 				this.select('progressSelector').hide();
 			} else {
 				this.select('progressSelector').show();
@@ -96,6 +115,7 @@ define(function(require) {
 		this.after('initialize', function() {
 			this.on(document, 'ui.task.deselect', this.deselectTask);
 			this.on(document, 'ui.task.select', this.selectTask);
+			this.on(document, 'data.task.provideList', this.update);
 			this.on(document, 'ui.render', this.render);
 			
 			this.on('click', {
