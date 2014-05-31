@@ -6,6 +6,7 @@ define(function(require) {
 	function list() {
 
 		this.defaultAttrs({
+			listSelector : '.list-group',
 			itemSelector : '.list-group-item',
 		});
 
@@ -26,6 +27,7 @@ define(function(require) {
 			}, this);
 
 			this.$node.html($list);
+			this.render();
 
 		};
 
@@ -41,13 +43,26 @@ define(function(require) {
 
 		this.render = function() {
 			var self = this;
-			this.select('itemSelector').each(function(i, el){
+
+			var items = this.select('itemSelector').get();
+
+			items.sort(function(a,b){
+				var sa = $(a).data('task').getScore();
+				var sb = $(b).data('task').getScore();
+				return sa < sb;
+			});
+
+			items.forEach(function(el){
 				var $el = $(el);
 				var meta = $el.data('meta');
 				var task = $el.data('task');
 				self.renderItem(task, meta);
 
-			});
+				console.log(el);
+
+				$el.appendTo(this.select('listSelector'));
+			}, this);
+
 		};
 
 		this.deselectTask = function() {
