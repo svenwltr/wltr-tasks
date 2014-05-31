@@ -25,12 +25,21 @@
 	</div>
 
 	<div class="container">
-		<div class="col-md-6 col-md-push-6 col-xs-12 col-xs-push-0">
+		<div class="col-sm-6 col-sm-push-6 col-xs-12 col-xs-push-0">
 			<div class="panel panel-default" id="task-detail" style="display: none;">
+				<div class="panel-heading">
+					<a href="#" class="btn btn-link" title="Just done."><span class="glyphicon glyphicon-ok"></span></a>
+					<a href="#" class="btn btn-link" title="Set last execution time."><span class="glyphicon glyphicon-time"></span></a>
+					<a href="#" class="btn btn-link" title="Edit task details."><span class="glyphicon glyphicon-pencil"></span></a>
+					<a href="#" class="btn btn-link" title="Delete task."><span class="glyphicon glyphicon-trash"></span></a>
+					<div class="pull-right">
+						<a href="#" class="btn btn-link" title="Close" data-action="deselect"><span class="glyphicon glyphicon-remove"></span></a>
+					</div>
+				</div>
 				<div class="panel-body">
-					<button type="button" class="close" data-action="deselect">&times;</button>
 					<h3 data-bind="title"></h3>
-					<p data-bind="description"></p>
+					<p class="text-justify" data-bind="description"></p>
+
 					<div class="well well-sm">
 						<dl class="dl-horizontal">
 							<dt>Score</dt>
@@ -43,9 +52,11 @@
 							<dd data-bind="next-execution">-</dd>
 						</dl>
 					</div>
+
 					<div class="progress">
 						<div class="progress-bar" role="progressbar"></div>
 					</div>
+
 				</div>
 			</div>
 			<div class="well" id="task-form" style="display: none;">
@@ -65,7 +76,7 @@
 				<button type="submit" class="btn btn-success btn-block" id="input-submit">Save</button>
 			</div>
 		</div>
-		<div class="col-md-6 col-md-pull-6 col-xs-12 col-xs-pull-0" id="task-list" style="display: none;">
+		<div class="col-sm-6 col-sm-pull-6 col-xs-12 col-xs-pull-0" id="task-list" style="display: none;">
 		</div>
 	</div>
 

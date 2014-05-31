@@ -24,8 +24,16 @@ body.loading {
 	cursor: pointer;
 }
 
-#task-detail .panel-body {
-	padding-bottom: 0;
+#task-detail .panel-heading {
+	padding: 0;
+}
+
+#task-detail .panel-heading a {
+	color: #4d4d4d;
+}
+
+#task-detail .panel-heading a:hover {
+	color: #999;
 }
 
 #task-detail h3 {
@@ -34,10 +42,19 @@ body.loading {
 
 #task-detail .close {
 	margin-top: -5px;
+	margin-left: 10px;
+}
+
+#task-detail .well {
+	margin-bottom: 15px;
 }
 
 #task-detail dl {
 	margin-bottom: 0;
+}
+
+#task-detail .progress {
+	margin: 0;
 }
 
 .noselect {

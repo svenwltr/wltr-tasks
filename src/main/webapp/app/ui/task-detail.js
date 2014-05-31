@@ -16,8 +16,11 @@ define(function(require) {
 			scoreSelector : '[data-bind="score"]',
 			lastExecutionSelector : '[data-bind="last-execution"]',
 			nextExecutionSelector : '[data-bind="next-execution"]',
+
 			progressBarSelector : '.progress-bar',
 			progressSelector : '.progress',
+
+			menuSelector : '[data-action="menu"]',
 			closeSelector : '[data-action="deselect"]',
 		});
 
@@ -49,9 +52,16 @@ define(function(require) {
 			
 		};
 		
-		this.closeClicked = function() {
+		this.closeClicked = function(event) {
 			this.trigger(document, 'ui.task.deselect');
+			event.preventDefault();
 			
+		};
+
+		this.menuClicked = function(event) {
+			console.log(event);
+			event.preventDefault();
+
 		};
 
 		this.after('initialize', function() {
@@ -60,6 +70,7 @@ define(function(require) {
 			
 			this.on('click', {
 				'closeSelector' : this.closeClicked,
+				'menuSelector' : this.menuClicked,
 			});
 
 		});
