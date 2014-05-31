@@ -32,12 +32,17 @@ define(function(require) {
 		};
 
 		this.renderItem = function(task, meta) {
+
 			meta.$title.text(task.title);
 			meta.$description.text(task.description);
 			if (task.getScore() == Infinity)
 				meta.$score.html('&infin;');
 			else
 				meta.$score.text(task.getScore());
+
+			var active = this.$node.data('activeTask');
+			if(active == task.id)
+				meta.$mark.show();
 
 		};
 
@@ -58,8 +63,6 @@ define(function(require) {
 				var task = $el.data('task');
 				self.renderItem(task, meta);
 
-				console.log(el);
-
 				$el.appendTo(this.select('listSelector'));
 			}, this);
 
@@ -72,6 +75,7 @@ define(function(require) {
 		};
 
 		this.selectTask = function(event, task) {
+			this.$node.data('activeTask', task.id);
 			this.deselectTask();
 			var $item = $('[data-task-id="' + task.id + '"]');
 			var meta = $item.data('meta');
