@@ -40,11 +40,6 @@ body.loading {
 	margin-top: 0;
 }
 
-#task-detail .close {
-	margin-top: -5px;
-	margin-left: 10px;
-}
-
 #task-detail .well {
 	margin-bottom: 15px;
 }

@@ -22,6 +22,7 @@ define(function(require) {
 
 			doneSelector : '[data-action="done"]',
 			setTimeSelector : '[data-action="set-time"]',
+			setTimeInputSelector : '#setTimeInput',
 			editSelector : '[data-action="edit"]',
 			deleteSelector : '[data-action="delete"]',
 			closeSelector : '[data-action="close"]',
@@ -111,6 +112,25 @@ define(function(require) {
 			event.preventDefault();
 			
 		};
+		
+		this.submittedSetTime = function(event) {
+			if(event.keyCode != 13)
+				return;
+
+			var value = this.select('setTimeInputSelector').val();
+			var datetime = moment(value);
+
+			if(!datetime.isValid())
+				return;
+
+			this.select('setTimeSelector').popover('hide');
+
+			this.trigger('data.task.save', {
+				id : this.$node.data('task').id,
+				lastExecution : datetime.valueOf(),
+			});
+
+		};
 
 		this.after('initialize', function() {
 			this.on(document, 'ui.task.deselect', this.deselectTask);
@@ -118,6 +138,12 @@ define(function(require) {
 			this.on(document, 'data.task.provideList', this.update);
 			this.on(document, 'ui.render', this.render);
 			
+			this.select('setTimeSelector').popover({
+				placement : 'bottom',	
+				html : true,
+				content : buildSetTimeContent,
+			});
+
 			this.on('click', {
 				'doneSelector' : this.clickedDone,
 				'setTimeSelector' : this.clickedSetTime,
@@ -126,7 +152,21 @@ define(function(require) {
 				'closeSelector' : this.clickedClose,
 			});
 
+			this.on('keyup', { 'setTimeInputSelector' :  this.submittedSetTime});
+
+
 		});
+	}
+
+	function buildSetTimeContent() {
+		var now = moment().format('YYYY-MM-DDTHH:mm');
+		var $content = $('<div>')
+			.append(
+				$('<input>').attr('type', 'datetime-local').attr('id', 'setTimeInput').attr('value', now)
+			);
+
+		return $('<div>').html($content).html();
+
 	}
 
 });
