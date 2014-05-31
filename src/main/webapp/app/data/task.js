@@ -1,4 +1,7 @@
 define(function(require) {
+
+	var Task = require('task');
+
 	var defineComponent = require('flight/lib/component');
 	return defineComponent(task);
 
@@ -8,20 +11,15 @@ define(function(require) {
 			$.ajax({
 				url : '/api/tasks/',
 				success : function(data) {
-
-					data.forEach(function(task) {
-						task.executionDiff = Date.now() - task.lastExecution;
-						task.nextExecution = task.lastExecution + task.interval;
-						if (task.lastExecution)
-							task.score = task.executionDiff / task.interval
-									* 100;
-						else
-							task.score = Infinity;
-
+					var tasks = [];
+					data.forEach(function(taskData) {
+						tasks.push(new Task(taskData));
 					});
 
+					console.log(tasks);
+
 					parent.trigger('data.task.provideList', {
-						tasks : data,
+						tasks : tasks,
 					});
 				},
 			});

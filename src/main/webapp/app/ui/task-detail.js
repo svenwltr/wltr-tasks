@@ -34,26 +34,31 @@ define(function(require) {
 
 		this.selectTask = function(event, task) {
 			this.$node.data('task', task);
+			this.render();
+			this.$node.show();
+			
+		};
+
+		this.render = function() {
+			var task = this.$node.data('task');
 
 			this.select('idSelector').text(task.id);
 			this.select('titleSelector').text(task.title);
-			this.select('intervalSelector').text(moment.duration(task.interval).humanize());
+			this.select('intervalSelector').text(task.getInterval().humanize());
 			this.select('descriptionSelector').text(task.description);
-			this.select('lastExecutionSelector').text(moment(task.lastExecution).fromNow()).attr('title', moment(task.lastExecution).calendar());
-			this.select('nextExecutionSelector').text(moment(task.nextExecution).fromNow()).attr('title', moment(task.nextExecution).calendar());
+			this.select('lastExecutionSelector').text(task.getLastExecution().fromNow()).attr('title', task.getLastExecution().calendar());
+			this.select('nextExecutionSelector').text(task.getNextExecution().fromNow()).attr('title', task.getNextExecution().calendar());
 
 			if (task.score == Infinity) {
 				this.select('progressSelector').hide();
 			} else {
 				this.select('progressSelector').show();
-				this.select('scoreSelector').text(Math.round(task.score) + '%');
+				this.select('scoreSelector').text(task.getScore());
 				this.select('progressBarSelector').css('width',
-						task.score + '%');
+						task.getExactScore() + '%');
 
 			}
 
-			this.$node.show();
-			
 		};
 		
 		this.clickedDone = function(event) {
@@ -91,6 +96,7 @@ define(function(require) {
 		this.after('initialize', function() {
 			this.on(document, 'ui.task.deselect', this.deselectTask);
 			this.on(document, 'ui.task.select', this.selectTask);
+			this.on(document, 'ui.render', this.render);
 			
 			this.on('click', {
 				'doneSelector' : this.clickedDone,

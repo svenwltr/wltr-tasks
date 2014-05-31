@@ -15,12 +15,7 @@ define(function(require) {
 			data.tasks.forEach(function(task) {
 				var meta = createTaskItem();
 
-				meta.$title.text(task.title);
-				meta.$description.text(task.description);
-				if (task.score == Infinity)
-					meta.$score.html('&infin;');
-				else
-					meta.$score.text(Math.round(task.score));
+				this.renderItem(task, meta);
 
 				$list.append(meta.$root);
 
@@ -32,6 +27,27 @@ define(function(require) {
 
 			this.$node.html($list);
 
+		};
+
+		this.renderItem = function(task, meta) {
+			meta.$title.text(task.title);
+			meta.$description.text(task.description);
+			if (task.getScore() == Infinity)
+				meta.$score.html('&infin;');
+			else
+				meta.$score.text(task.getScore());
+
+		};
+
+		this.render = function() {
+			var self = this;
+			this.select('itemSelector').each(function(i, el){
+				var $el = $(el);
+				var meta = $el.data('meta');
+				var task = $el.data('task');
+				self.renderItem(task, meta);
+
+			});
 		};
 
 		this.deselectTask = function() {
@@ -62,6 +78,7 @@ define(function(require) {
 
 		this.after('initialize', function() {
 			this.on(document, 'data.task.provideList', this.provideList);
+			this.on(document, 'ui.render', this.render);
 			this.on(document, 'ui.task.deselect', this.deselectTask);
 			this.on(document, 'ui.task.select', this.selectTask);
 
