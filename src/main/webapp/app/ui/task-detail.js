@@ -20,8 +20,11 @@ define(function(require) {
 			progressBarSelector : '.progress-bar',
 			progressSelector : '.progress',
 
-			menuSelector : '[data-action="menu"]',
-			closeSelector : '[data-action="deselect"]',
+			doneSelector : '[data-action="done"]',
+			setTimeSelector : '[data-action="set-time"]',
+			editSelector : '[data-action="edit"]',
+			deleteSelector : '[data-action="delete"]',
+			closeSelector : '[data-action="close"]',
 		});
 
 		this.deselectTask = function() {
@@ -30,6 +33,7 @@ define(function(require) {
 		};
 
 		this.selectTask = function(event, task) {
+			this.$node.data('task', task);
 
 			this.select('idSelector').text(task.id);
 			this.select('titleSelector').text(task.title);
@@ -52,16 +56,36 @@ define(function(require) {
 			
 		};
 		
-		this.closeClicked = function(event) {
+		this.clickedDone = function(event) {
+			event.preventDefault();
+
+			this.trigger(document, 'data.task.save', {
+				id : this.$node.data('task').id,
+				lastExecution : moment().valueOf(),
+			});
+
+		};
+
+		this.clickedSetTime = function(event) {
+			event.preventDefault();
+
+		};
+
+		this.clickedEdit = function(event) {
+			this.trigger(document, 'ui.task.edit', this.$node.data('task'));
+			event.preventDefault();
+
+		};
+
+		this.clickedDelete = function(event) {
+			event.preventDefault();
+
+		};
+
+		this.clickedClose = function(event) {
 			this.trigger(document, 'ui.task.deselect');
 			event.preventDefault();
 			
-		};
-
-		this.menuClicked = function(event) {
-			console.log(event);
-			event.preventDefault();
-
 		};
 
 		this.after('initialize', function() {
@@ -69,8 +93,11 @@ define(function(require) {
 			this.on(document, 'ui.task.select', this.selectTask);
 			
 			this.on('click', {
-				'closeSelector' : this.closeClicked,
-				'menuSelector' : this.menuClicked,
+				'doneSelector' : this.clickedDone,
+				'setTimeSelector' : this.clickedSetTime,
+				'editSelector' : this.clickedEdit,
+				'deleteSelector' : this.clickedDelete,
+				'closeSelector' : this.clickedClose,
 			});
 
 		});

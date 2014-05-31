@@ -26,14 +26,30 @@
 
 	<div class="container">
 		<div class="col-sm-6 col-sm-push-6 col-xs-12 col-xs-push-0">
+			<div class="well" id="task-form" style="display: none;">
+				<input name="id" id="input-id" type="hidden">
+				<div class="form-group">
+					<label class="sr-only" for="input-title">Title</label>
+					<input name=title class="form-control" id="input-title" placeholder="Enter title ...">
+				</div>
+				<div class="form-group">
+					<label class="sr-only" for="input-interval">Interval</label>
+					<input name="interval" class="form-control" id="input-interval" placeholder="Enter interval ...">
+				</div>
+				<div class="form-group">
+					<label class="sr-only" for="input-dscription">Description</label>
+					<textarea name="description" class="form-control" id="input-dscription" placeholder="Enter description ..."></textarea>
+				</div>
+				<button type="submit" class="btn btn-success btn-block" id="input-submit">Save</button>
+			</div>
 			<div class="panel panel-default" id="task-detail" style="display: none;">
 				<div class="panel-heading">
-					<a href="#" class="btn btn-link" title="Just done."><span class="glyphicon glyphicon-ok"></span></a>
-					<a href="#" class="btn btn-link" title="Set last execution time."><span class="glyphicon glyphicon-time"></span></a>
-					<a href="#" class="btn btn-link" title="Edit task details."><span class="glyphicon glyphicon-pencil"></span></a>
-					<a href="#" class="btn btn-link" title="Delete task."><span class="glyphicon glyphicon-trash"></span></a>
+					<a href="#" class="btn btn-link" data-action="done" title="Just done."><span class="glyphicon glyphicon-ok"></span></a>
+					<a href="#" class="btn btn-link" data-action="set-time" title="Set last execution time."><span class="glyphicon glyphicon-time"></span></a>
+					<a href="#" class="btn btn-link" data-action="edit" title="Edit task details."><span class="glyphicon glyphicon-pencil"></span></a>
+					<a href="#" class="btn btn-link" data-action="delete" title="Delete task."><span class="glyphicon glyphicon-trash"></span></a>
 					<div class="pull-right">
-						<a href="#" class="btn btn-link" title="Close" data-action="deselect"><span class="glyphicon glyphicon-remove"></span></a>
+						<a href="#" class="btn btn-link" title="Close" data-action="close"><span class="glyphicon glyphicon-remove"></span></a>
 					</div>
 				</div>
 				<div class="panel-body">
@@ -58,22 +74,6 @@
 					</div>
 
 				</div>
-			</div>
-			<div class="well" id="task-form" style="display: none;">
-				<input name="id" id="input-id" type="hidden">
-				<div class="form-group">
-					<label class="sr-only" for="input-title">Title</label>
-					<input name=title class="form-control" id="input-title" placeholder="Enter title ...">
-				</div>
-				<div class="form-group">
-					<label class="sr-only" for="input-interval">Interval</label>
-					<input name="interval" class="form-control" id="input-interval" placeholder="Enter interval ...">
-				</div>
-				<div class="form-group">
-					<label class="sr-only" for="input-dscription">Description</label>
-					<textarea name="description" class="form-control" id="input-dscription" placeholder="Enter description ..."></textarea>
-				</div>
-				<button type="submit" class="btn btn-success btn-block" id="input-submit">Save</button>
 			</div>
 		</div>
 		<div class="col-sm-6 col-sm-pull-6 col-xs-12 col-xs-pull-0" id="task-list" style="display: none;">

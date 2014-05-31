@@ -1,6 +1,5 @@
 package eu.wltr.riker.task;
 
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
@@ -15,11 +14,8 @@ import eu.wltr.riker.auth.AuthContext;
 import eu.wltr.riker.meta.token.Token;
 import eu.wltr.riker.utils.httperror.Http400BadRequest;
 
-
 @RestController
-@RequestMapping(
-		value = "tasks/",
-		produces = "application/json")
+@RequestMapping(value = "tasks/", produces = "application/json")
 public class TaskController {
 
 	@Autowired
@@ -47,9 +43,7 @@ public class TaskController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public Task upsert(
-			@RequestBody Task task,
-			HttpServletResponse response,
+	public Task upsert(@RequestBody Task task, HttpServletResponse response,
 			AuthContext ctx) {
 
 		if (task.getUserToken() != null) {
@@ -58,20 +52,21 @@ public class TaskController {
 
 		}
 
-		if (task.getTitle() == null || task.getTitle().isEmpty()) {
-			response.addHeader("X-400-REASON", "'title' is required");
-			throw new Http400BadRequest();
+		if (task.getId() == null) {
+			if (task.getTitle() == null || task.getTitle().isEmpty()) {
+				response.addHeader("X-400-REASON", "'title' is required");
+				throw new Http400BadRequest();
+			}
 
-		}
+			if (task.getInterval() == null) {
+				response.addHeader("X-400-REASON", "'interval' is required");
+				throw new Http400BadRequest();
+			}
 
-		if (task.getInterval() == null) {
-			response.addHeader("X-400-REASON", "'interval' is required");
-			throw new Http400BadRequest();
-
-		}
-
-		if (task.getId() == null)
 			taskBo.create(task, ctx);
+			
+		}
+
 		else
 			taskBo.update(task, ctx);
 

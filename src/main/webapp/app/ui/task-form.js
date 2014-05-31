@@ -36,8 +36,13 @@ define(function(require) {
 		};
 
 		this.selectTask = function(event, task) {
-			this.setForm(task);
 			this.$node.hide();
+
+		};
+
+		this.editTask = function(event, task) {
+			this.setForm(task);
+			this.$node.show();
 
 		};
 
@@ -57,6 +62,7 @@ define(function(require) {
 		this.after('initialize', function() {
 			this.on(document, 'ui.task.deselect', this.deselectTask);
 			this.on(document, 'ui.task.select', this.selectTask);
+			this.on(document, 'ui.task.edit', this.editTask);
 
 			this.on('click', {
 				'submitSelector' : this.submitForm,
