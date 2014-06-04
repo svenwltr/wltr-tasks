@@ -103,6 +103,9 @@ define(function(require) {
 		};
 
 		this.clickedDelete = function(event) {
+			this.trigger('data.task.delete', {
+				id : this.$node.data('task').id,
+			});
 			event.preventDefault();
 
 		};

@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -64,7 +65,7 @@ public class TaskController {
 			}
 
 			taskBo.create(task, ctx);
-			
+
 		}
 
 		else
@@ -72,6 +73,13 @@ public class TaskController {
 
 		response.setStatus(HttpServletResponse.SC_ACCEPTED);
 		return task;
+
+	}
+
+	@RequestMapping(value = "{id}/", method = RequestMethod.DELETE)
+	public void delete(@PathVariable("id") String id,
+			HttpServletResponse response, AuthContext ctx) {
+		taskBo.delete(new Token(id), ctx);
 
 	}
 

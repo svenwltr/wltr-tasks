@@ -44,4 +44,9 @@ public class TaskDto {
 
 	}
 
+	public void delete(Token id) {
+		collection.remove("{_id: #}", id.toString());
+		
+	}
+
 }

@@ -51,4 +51,20 @@ public class TaskBo {
 
 	}
 
+	public void delete(Token id, AuthContext ctx) {
+		Task old = taskDto.findOne(id);
+		
+		if (old == null)
+			throw new RuntimeException();
+		
+		Token requestUser = ctx.getUser().getToken();
+		Token taskUser = old.getUserToken();
+		
+		if (!requestUser.equals(taskUser))
+			throw new SecurityException();
+		
+		taskDto.delete(id);
+		
+	}
+
 }
