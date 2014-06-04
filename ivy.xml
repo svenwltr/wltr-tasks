@@ -1,0 +1,23 @@
+<ivy-module version="2.0">
+	<info organisation="eu.wltr.riker" module="riker"/>
+	<configurations defaultconfmapping="main->default;build-standalone->default;provided->default">
+		<conf name="main" visibility="public" description="Dependencies for WAR file." />
+		<conf name="provided" visibility="public" description="Provided JARs." />
+	</configurations>
+	
+	<dependencies>
+		<!--<dependency org="junit" name="junit" rev="3.8.1" conf="test" />-->
+		<dependency conf="main" org="org.springframework" name="spring-webmvc" rev="4.0.1.RELEASE" />
+		<dependency conf="main" org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.3.3" />
+		<dependency conf="main" org="com.fasterxml.jackson.datatype" name="jackson-datatype-joda" rev="2.3.3" />
+		<dependency conf="main" org="org.jongo" name="jongo" rev="1.0" />
+		<dependency conf="main" org="org.mongodb" name="mongo-java-driver" rev="2.12.1" />
+		<dependency conf="main" org="org.apache.oltu.oauth2" name="org.apache.oltu.oauth2.client" rev="1.0.0" />
+		<dependency conf="main" org="org.apache.oltu.oauth2" name="org.apache.oltu.oauth2.jwt" rev="1.0.0" />
+		<dependency conf="main" org="joda-time" name="joda-time" rev="2.3" />
+		<dependency conf="main" org="com.lambdaworks" name="scrypt" rev="1.4.0" />
+		
+		<dependency conf="provided" org="javax.servlet" name="javax.servlet-api" rev="3.0.1" />
+
+	</dependencies>
+</ivy-module>

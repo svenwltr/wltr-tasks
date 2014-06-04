@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<project name="riker" basedir="." default="build" xmlns="antlib:org.apache.tools.ant" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<exec executable="git" outputproperty="riker.version">
+		<arg value="describe" />
+		<arg value="--dirty" />
+	</exec>
+
+	<property name="riker.buildDir" value="build" />
+	<property name="riker.distDir" value="dist" />
+
+	<property name="riker.distWarTarget" value="${riker.distDir}/wltr-tasks-${riker.version}.war" />
+
+	<property name="riker.dependencyDir" value="${riker.buildDir}/lib" />
+	<property name="ivy.retrieve.pattern" value="${riker.dependencyDir}/[conf]/[artifact](-[classifier]).[ext]" />
+
+	<target name="clean" description="--> remove all temporary build files">
+		<delete dir="${riker.buildDir}" />
+		<delete dir="${riker.distDir}" />
+	</target>
+
+	<target name="resolve" depends="clean" description="--> retrieve dependencies with Ivy">
+		<ivy:retrieve conf="main" symlink="true" />
+		<ivy:retrieve conf="provided" symlink="true" />
+	</target>
+
+	<target name="build" depends="resolve" description="--> compiles project into WAR file">
+		<!-- Prepare -->
+		<mkdir dir="${riker.distDir}" />
+		<mkdir dir="${riker.buildDir}" />
+		<mkdir dir="${riker.buildDir}/classes" />
+
+		<!-- get version -->
+		<property name="riker.version" value="" />
+
+		<!-- Compile -->
+		<javac includeantruntime="false" srcdir="src/main/java" destdir="${riker.buildDir}/classes" source="1.7" debug="on">
+			<classpath>
+				<pathelement path="${java.class.path}" />
+				<fileset dir="${riker.dependencyDir}/main">
+					<include name="**" />
+				</fileset>
+				<fileset dir="${riker.dependencyDir}/provided">
+					<include name="**" />
+				</fileset>
+			</classpath>
+		</javac>
+
+		<!-- Package -->
+		<war destfile="${riker.buildDir}/riker.war" webxml="src/main/webapp/WEB-INF/web.xml">
+			<fileset dir="src/main/webapp" />
+			<lib dir="${riker.dependencyDir}/main">
+			</lib>
+			<classes dir="${riker.buildDir}/classes" />
+		</war>
+		<copy file="${riker.buildDir}/riker.war" tofile="${riker.distWarTarget}" />
+	</target>
+	
+</project>
