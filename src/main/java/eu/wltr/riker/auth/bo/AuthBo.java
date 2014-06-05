@@ -1,9 +1,10 @@
 package eu.wltr.riker.auth.bo;
 
-
 import java.math.BigInteger;
 import java.util.Random;
 
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,6 @@ import eu.wltr.riker.auth.pojo.User;
 import eu.wltr.riker.meta.MetaDto;
 import eu.wltr.riker.meta.token.TokenBo;
 
-
 @Service
 public class AuthBo {
 
@@ -27,6 +27,8 @@ public class AuthBo {
 	private static final int SESSION_R = 8;
 	private static final int SESSION_P = 1;
 	private static final int SECRET_SIZE = 1024;
+
+	private static final Duration EXPIRY = Duration.standardDays(30);
 
 	@Autowired
 	private UserDto userDto;
@@ -93,6 +95,7 @@ public class AuthBo {
 		Session session = new Session();
 		session.setToken(tokenBo.next());
 		session.setHashed(hashed);
+		session.setExpires(DateTime.now().plus(EXPIRY));
 
 		userDto.addSession(user.getToken(), session);
 
@@ -101,7 +104,9 @@ public class AuthBo {
 	}
 
 	public boolean verifySession(Session session, String secret) {
-		return session != null && SCryptUtil.check(secret, session.getHashed());
+		return session != null && SCryptUtil.check(secret, session.getHashed())
+				&& session.getExpires() != null
+				&& session.getExpires().isAfterNow();
 
 	}
 

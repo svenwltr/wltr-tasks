@@ -1,6 +1,5 @@
 package eu.wltr.riker.auth;
 
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +14,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.apache.oltu.oauth2.common.message.types.ResponseType;
 import org.apache.oltu.oauth2.jwt.JWT;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,6 @@ import eu.wltr.riker.auth.pojo.OAuthProviders;
 import eu.wltr.riker.auth.pojo.Session;
 import eu.wltr.riker.auth.pojo.User;
 import eu.wltr.riker.utils.httperror.Http404NotFound;
-
 
 @Controller
 @Scope("request")
@@ -47,10 +46,12 @@ public class LoginController {
 
 	}
 
-	private Cookie createCookie(String name, String value) {
+	private Cookie createCookie(String name, String value, DateTime expires) {
 		Cookie c = new Cookie(name, value);
 		c.setPath("/");
-		c.setMaxAge(3600);
+		
+		long exireyMillis = expires.getMillis() - DateTime.now().getMillis();
+		c.setMaxAge((int) (exireyMillis / 1000));
 
 		return c;
 
@@ -62,16 +63,10 @@ public class LoginController {
 	}
 
 	private String getCallbackUri(String providerName) {
-		return new StringBuilder()
-				.append(request.getScheme())
-				.append("://")
-				.append(request.getServerName())
-				.append(":")
-				.append(request.getServerPort())
-				.append("/api/login/")
-				.append(providerName)
-				.append("/callback/")
-				.toString();
+		return new StringBuilder().append(request.getScheme()).append("://")
+				.append(request.getServerName()).append(":")
+				.append(request.getServerPort()).append("/api/login/")
+				.append(providerName).append("/callback/").toString();
 
 	}
 
@@ -89,8 +84,8 @@ public class LoginController {
 			return redirect(getSuccessUri());
 
 		OAuthProviders.Provider provider = bo.getProvider(providerName);
-		
-		if(provider == null)
+
+		if (provider == null)
 			throw new Http404NotFound("Provider not found.");
 
 		OAuthClientRequest request = OAuthClientRequest
@@ -107,10 +102,8 @@ public class LoginController {
 	}
 
 	@RequestMapping("/callback/")
-	public String getCallback(
-			@PathVariable String providerName,
-			HttpServletRequest request,
-			HttpServletResponse response)
+	public String getCallback(@PathVariable String providerName,
+			HttpServletRequest request, HttpServletResponse response)
 			throws OAuthProblemException, OAuthSystemException {
 		OAuthProviders.Provider provider = bo.getProvider(providerName);
 
@@ -122,8 +115,7 @@ public class LoginController {
 				.setClientSecret(provider.clientSecret)
 				.setRedirectURI(getCallbackUri(providerName))
 				.setCode(oar.getCode())
-				.setGrantType(GrantType.AUTHORIZATION_CODE)
-				.buildBodyMessage();
+				.setGrantType(GrantType.AUTHORIZATION_CODE).buildBodyMessage();
 		OAuthClient client = new OAuthClient(new URLConnectionClient());
 		OAuthAccessTokenResponse oauthResponse = client.accessToken(crequest,
 				OpenIdConnectResponse.class);
@@ -144,8 +136,9 @@ public class LoginController {
 		Session session = bo.createSession(user, secret);
 
 		response.addCookie(createCookie("session_id", session.getToken()
-				.toString()));
-		response.addCookie(createCookie("session_secret", secret));
+				.toString(), session.getExpires()));
+		response.addCookie(createCookie("session_secret", secret,
+				session.getExpires()));
 
 		return redirect(getSuccessUri());
 

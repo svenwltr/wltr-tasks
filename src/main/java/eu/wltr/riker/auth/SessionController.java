@@ -19,6 +19,7 @@ public class SessionController {
 		map.put("sessionToken", ctx.getSession().getToken());
 		map.put("userToken", ctx.getUser().getToken());
 		map.put("userName", ctx.getUser().getName());
+		map.put("sessionExpires", ctx.getSession().getExpires());
 
 		return map;
 

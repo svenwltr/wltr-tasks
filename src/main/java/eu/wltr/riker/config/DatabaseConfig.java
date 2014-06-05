@@ -7,7 +7,6 @@ import org.jongo.Jongo;
 import org.jongo.Mapper;
 import org.jongo.marshall.jackson.JacksonMapper;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.datatype.joda.JodaModule;
@@ -18,7 +17,6 @@ import eu.wltr.riker.meta.token.jackson.TokenModule;
 
 
 @Configuration
-@ComponentScan("eu.wltr.riker.data")
 public class DatabaseConfig {
 
 	@Bean
