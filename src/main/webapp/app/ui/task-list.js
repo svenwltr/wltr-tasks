@@ -69,6 +69,7 @@ define(function(require) {
 		};
 
 		this.deselectTask = function() {
+			this.$node.data('activeTask', 0);
 			this.select('itemSelector').each(function(i, el) {
 				$(el).data('meta').$mark.hide();
 			});
