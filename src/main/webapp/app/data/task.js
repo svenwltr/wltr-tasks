@@ -1,6 +1,6 @@
 define(function(require) {
 
-	var Task = require('task');
+	var Task = require('utils/task');
 
 	var defineComponent = require('flight/lib/component');
 	return defineComponent(task);
