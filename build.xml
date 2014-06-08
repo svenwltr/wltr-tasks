@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="riker" basedir="." default="build" xmlns="antlib:org.apache.tools.ant" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="riker" basedir="." default="package" xmlns="antlib:org.apache.tools.ant" xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<exec executable="git" outputproperty="riker.version">
 		<arg value="describe" />
@@ -23,10 +23,12 @@
 		<mkdir dir="${riker.distDir}" />
 		<mkdir dir="${riker.buildDir}" />
 		<mkdir dir="${riker.buildDir}/java" />
+		<mkdir dir="${riker.buildDir}/java-test" />
+		<mkdir dir="${riker.buildDir}/report-test" />
 
 		<copy todir="${riker.buildDir}/java">
 			<fileset dir="src/main/java">
-				<include name="**/*.java"/>
+				<include name="**/*.java" />
 			</fileset>
 		</copy>
 
@@ -35,14 +37,15 @@
 				<exclude name="app/bower_components/**" />
 			</fileset>
 		</copy>
-		
-		<echo file="${riker.buildDir}/webapp/.bowerrc">{"directory" : "app/bower_components"}</echo> 
-		
+
+		<echo file="${riker.buildDir}/webapp/.bowerrc">{"directory" : "app/bower_components"}</echo>
+
 	</target>
 
 	<target name="resolve" depends="prepare" description="--> retrieve dependencies with Ivy">
 		<ivy:retrieve conf="main" symlink="true" />
 		<ivy:retrieve conf="provided" symlink="true" />
+		<ivy:retrieve conf="test" symlink="true" />
 
 		<exec executable="bower" dir="${riker.buildDir}/webapp">
 			<arg value="install" />
@@ -51,27 +54,59 @@
 
 	</target>
 
-	<target name="build" depends="resolve" description="--> compiles project into WAR file">
+	<target name="compile" depends="resolve">
 		<!-- Compile -->
 		<javac includeantruntime="false" srcdir="src/main/java" destdir="${riker.buildDir}/java" source="1.7" debug="on">
 			<classpath>
 				<pathelement path="${java.class.path}" />
-				<fileset dir="${riker.dependencyDir}/main">
-					<include name="**" />
-				</fileset>
-				<fileset dir="${riker.dependencyDir}/provided">
-					<include name="**" />
-				</fileset>
+				<fileset dir="${riker.dependencyDir}/main" includes="**" />
+				<fileset dir="${riker.dependencyDir}/provided" includes="**" />
 			</classpath>
 		</javac>
 
+		<!-- Compile test classes -->
+		<javac includeantruntime="false" srcdir="src/test/java" destdir="${riker.buildDir}/java-test" source="1.7" debug="on">
+			<classpath>
+				<pathelement path="${java.class.path}" />
+				<pathelement path="${riker.buildDir}/java" />
+				<fileset dir="${riker.dependencyDir}/test" includes="**" />
+				<fileset dir="${riker.dependencyDir}/main" includes="**" />
+				<fileset dir="${riker.dependencyDir}/provided" includes="**" />
+			</classpath>
+		</javac>
+
+	</target>
+
+	<target name="test" depends="compile" description="--> tests application">
+		<junit fork="yes" printsummary="yes" haltonfailure="yes">
+			<classpath>
+				<pathelement location="${riker.buildDir}/java" />
+				<pathelement location="${riker.buildDir}/java-test" />
+				<pathelement path="${java.class.path}" />
+				<fileset dir="${riker.dependencyDir}/test" includes="**" />
+				<fileset dir="${riker.dependencyDir}/main" includes="**" />
+				<fileset dir="${riker.dependencyDir}/provided" includes="**" />
+			</classpath>
+
+			<formatter type="plain" />
+			<formatter type="xml" />
+
+			<batchtest fork="yes" todir="${riker.buildDir}/report-test/">
+				<fileset dir="src/test/java">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="package" depends="test" description="--> compiles project into WAR file">
 		<!-- Package -->
 		<war destfile="${riker.buildDir}/riker.war" webxml="src/main/webapp/WEB-INF/web.xml">
 			<fileset dir="${riker.buildDir}/webapp">
 				<exclude name="bower.json" />
 				<exclude name=".bowerrc" />
 			</fileset>
-			<lib dir="${riker.dependencyDir}/main"/>
+			<lib dir="${riker.dependencyDir}/main" />
 			<classes dir="${riker.buildDir}/java" />
 		</war>
 		<copy file="${riker.buildDir}/riker.war" tofile="${riker.distWarTarget}" />

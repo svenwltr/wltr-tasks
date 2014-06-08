@@ -1,8 +1,9 @@
 <ivy-module version="2.0">
 	<info organisation="eu.wltr.riker" module="riker"/>
-	<configurations defaultconfmapping="main->default;build-standalone->default;provided->default">
+	<configurations defaultconfmapping="main->default;build-standalone->default;provided->default;test->default">
 		<conf name="main" visibility="public" description="Dependencies for WAR file." />
 		<conf name="provided" visibility="public" description="Provided JARs." />
+		<conf name="test" visibility="public" description="Dependencies for testing." />
 	</configurations>
 	
 	<dependencies>
@@ -19,5 +20,7 @@
 		
 		<dependency conf="provided" org="javax.servlet" name="javax.servlet-api" rev="3.0.1" />
 
+		<dependency conf="test" org="junit" name="junit" rev="4.11" />
+		<dependency conf="test" org="org.springframework" name="spring-test" rev="4.0.1.RELEASE" />
 	</dependencies>
 </ivy-module>
