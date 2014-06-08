@@ -1,6 +1,7 @@
 define(function(require) {
 
 	var moment = require('moment');
+	var DurationUtils = require('utils/duration');
 
 	var Task = function(data) {
 		this.id = data.id;
@@ -25,6 +26,10 @@ define(function(require) {
 
 	Task.prototype.getInterval = function() {
 		return moment.duration(this.interval);
+	};
+	
+	Task.prototype.getHumanInterval = function() {
+		return DurationUtils.humanize(this.interval);
 	};
 
 	Task.prototype.getExactScore = function() {

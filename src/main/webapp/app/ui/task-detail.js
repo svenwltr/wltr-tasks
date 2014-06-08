@@ -1,5 +1,4 @@
 define(function(require) {
-	var Utils = require('utils');
 	var moment = require('moment');
 
 	var defineComponent = require('flight/lib/component');
@@ -64,7 +63,7 @@ define(function(require) {
 
 			this.select('idSelector').text(task.id);
 			this.select('titleSelector').text(task.title);
-			this.select('intervalSelector').text(task.getInterval().humanize());
+			this.select('intervalSelector').text(task.getHumanInterval());
 			this.select('descriptionSelector').text(task.description);
 			this.select('lastExecutionSelector').text(task.getLastExecution().fromNow()).attr('title', task.getLastExecution().calendar());
 			this.select('nextExecutionSelector').text(task.getNextExecution().fromNow()).attr('title', task.getNextExecution().calendar());

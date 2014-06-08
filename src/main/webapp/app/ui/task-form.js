@@ -1,5 +1,5 @@
 define(function(require) {
-	var Utils = require('utils');
+	var DurationUtils = require('utils/duration');
 	var moment = require('moment');
 
 	var defineComponent = require('flight/lib/component');
@@ -19,8 +19,7 @@ define(function(require) {
 		this.setForm = function(task) {
 			this.select('idSelector').val(task.id);
 			this.select('titleSelector').val(task.title);
-			this.select('intervalSelector').val(
-					moment.duration(task.interval).humanize());
+			this.select('intervalSelector').val(task.getHumanInterval());
 			this.select('descriptionSelector').val(task.description);
 		};
 
@@ -51,7 +50,7 @@ define(function(require) {
 				id : this.select('idSelector').val(),
 				title : this.select('titleSelector').val(),
 				description : this.select('descriptionSelector').val(),
-				interval : Utils.parseDuration(this.select('intervalSelector')
+				interval : DurationUtils.parse(this.select('intervalSelector')
 						.val()),
 			};
 
@@ -67,7 +66,7 @@ define(function(require) {
 			this.on('click', {
 				'submitSelector' : this.submitForm,
 			});
-			
+
 			this.$node.fadeIn();
 
 		});
