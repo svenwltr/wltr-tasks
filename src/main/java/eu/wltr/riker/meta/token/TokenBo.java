@@ -6,8 +6,8 @@ import java.math.BigInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import eu.wltr.riker.ConverterUtils;
 import eu.wltr.riker.meta.MetaDto;
+import eu.wltr.riker.utils.ConverterUtils;
 
 
 @Service

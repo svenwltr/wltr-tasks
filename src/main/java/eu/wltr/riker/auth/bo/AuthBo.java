@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.lambdaworks.crypto.SCryptUtil;
 
-import eu.wltr.riker.ConverterUtils;
 import eu.wltr.riker.auth.dto.UserDto;
 import eu.wltr.riker.auth.pojo.Login;
 import eu.wltr.riker.auth.pojo.Login.Provider;
@@ -19,6 +18,7 @@ import eu.wltr.riker.auth.pojo.Session;
 import eu.wltr.riker.auth.pojo.User;
 import eu.wltr.riker.meta.MetaDto;
 import eu.wltr.riker.meta.token.TokenBo;
+import eu.wltr.riker.utils.ConverterUtils;
 
 @Service
 public class AuthBo {

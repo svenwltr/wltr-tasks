@@ -1,4 +1,4 @@
-package eu.wltr.riker;
+package eu.wltr.riker.utils;
 
 
 import java.math.BigInteger;
