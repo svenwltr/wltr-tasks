@@ -19,22 +19,38 @@
 		<delete dir="${riker.distDir}" />
 	</target>
 
-	<target name="resolve" depends="clean" description="--> retrieve dependencies with Ivy">
+	<target name="prepare" depends="clean" description="--> prepare building">
+		<mkdir dir="${riker.distDir}" />
+		<mkdir dir="${riker.buildDir}" />
+		<mkdir dir="${riker.buildDir}/java" />
+
+		<copy todir="${riker.buildDir}/java">
+			<fileset dir="src/main/java">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${riker.buildDir}/webapp">
+			<fileset dir="src/main/webapp">
+				<exclude name="app/bower_components/**" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="resolve" depends="prepare" description="--> retrieve dependencies with Ivy">
 		<ivy:retrieve conf="main" symlink="true" />
 		<ivy:retrieve conf="provided" symlink="true" />
+
+		<exec executable="bower" dir="${riker.buildDir}/webapp">
+			<arg value="install" />
+			<arg value="-.-production" />
+		</exec>
+
 	</target>
 
 	<target name="build" depends="resolve" description="--> compiles project into WAR file">
-		<!-- Prepare -->
-		<mkdir dir="${riker.distDir}" />
-		<mkdir dir="${riker.buildDir}" />
-		<mkdir dir="${riker.buildDir}/classes" />
-
-		<!-- get version -->
-		<property name="riker.version" value="" />
-
 		<!-- Compile -->
-		<javac includeantruntime="false" srcdir="src/main/java" destdir="${riker.buildDir}/classes" source="1.7" debug="on">
+		<javac includeantruntime="false" srcdir="src/main/java" destdir="${riker.buildDir}/java" source="1.7" debug="on">
 			<classpath>
 				<pathelement path="${java.class.path}" />
 				<fileset dir="${riker.dependencyDir}/main">
@@ -48,12 +64,13 @@
 
 		<!-- Package -->
 		<war destfile="${riker.buildDir}/riker.war" webxml="src/main/webapp/WEB-INF/web.xml">
-			<fileset dir="src/main/webapp" />
-			<lib dir="${riker.dependencyDir}/main">
-			</lib>
-			<classes dir="${riker.buildDir}/classes" />
+			<fileset dir="${riker.buildDir}/webapp">
+				<exclude name="bower.json" />
+			</fileset>
+			<lib dir="${riker.dependencyDir}/main"/>
+			<classes dir="${riker.buildDir}/java" />
 		</war>
 		<copy file="${riker.buildDir}/riker.war" tofile="${riker.distWarTarget}" />
 	</target>
-	
+
 </project>
