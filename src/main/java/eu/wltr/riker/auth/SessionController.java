@@ -17,9 +17,9 @@ public class SessionController {
 		Map<String, Object> map = new HashMap<>();
 
 		map.put("sessionToken", ctx.getSession().getToken());
+		map.put("sessionExpires", ctx.getSession().getExpires());
 		map.put("userToken", ctx.getUser().getToken());
 		map.put("userName", ctx.getUser().getName());
-		map.put("sessionExpires", ctx.getSession().getExpires());
 
 		return map;
 

@@ -23,5 +23,7 @@
 		<dependency conf="test" org="junit" name="junit" rev="4.11" />
 		<dependency conf="test" org="org.springframework" name="spring-test" rev="4.0.1.RELEASE" />
 		<dependency conf="test" org="org.jacoco" name="org.jacoco.ant" rev="0.7.1.201405082137" />
+		<dependency conf="test" org="com.jayway.jsonpath" name="json-path" rev="0.9.1" />
+		
 	</dependencies>
 </ivy-module>
