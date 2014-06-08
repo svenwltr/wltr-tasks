@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="riker" basedir="." default="package" xmlns="antlib:org.apache.tools.ant" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="riker" basedir="." default="package" xmlns="antlib:org.apache.tools.ant" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:jacoco="antlib:org.jacoco.ant">
 
 	<exec executable="git" outputproperty="riker.version">
 		<arg value="describe" />
@@ -52,6 +52,12 @@
 			<arg value="--production" />
 		</exec>
 
+		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+			<classpath>
+				<fileset dir="${riker.dependencyDir}/test" includes="**" />
+			</classpath>
+		</taskdef>
+
 	</target>
 
 	<target name="compile" depends="resolve">
@@ -78,25 +84,27 @@
 	</target>
 
 	<target name="test" depends="compile" description="--> tests application">
-		<junit fork="yes" printsummary="yes" haltonfailure="yes">
-			<classpath>
-				<pathelement location="${riker.buildDir}/java" />
-				<pathelement location="${riker.buildDir}/java-test" />
-				<pathelement path="${java.class.path}" />
-				<fileset dir="${riker.dependencyDir}/test" includes="**" />
-				<fileset dir="${riker.dependencyDir}/main" includes="**" />
-				<fileset dir="${riker.dependencyDir}/provided" includes="**" />
-			</classpath>
+		<jacoco:coverage destfile="${riker.buildDir}/report-test/jacoco.exec">
+			<junit fork="true" forkmode="once" printsummary="yes" haltonfailure="yes">
+				<classpath>
+					<pathelement location="${riker.buildDir}/java" />
+					<pathelement location="${riker.buildDir}/java-test" />
+					<pathelement path="${java.class.path}" />
+					<fileset dir="${riker.dependencyDir}/test" includes="**" />
+					<fileset dir="${riker.dependencyDir}/main" includes="**" />
+					<fileset dir="${riker.dependencyDir}/provided" includes="**" />
+				</classpath>
 
-			<formatter type="plain" />
-			<formatter type="xml" />
+				<formatter type="plain" />
+				<formatter type="xml" />
 
-			<batchtest fork="yes" todir="${riker.buildDir}/report-test/">
-				<fileset dir="src/test/java">
-					<include name="**/*Test*.java" />
-				</fileset>
-			</batchtest>
-		</junit>
+				<batchtest fork="yes" todir="${riker.buildDir}/report-test/">
+					<fileset dir="src/test/java">
+						<include name="**/*Test*.java" />
+					</fileset>
+				</batchtest>
+			</junit>
+		</jacoco:coverage>
 	</target>
 
 	<target name="package" depends="test" description="--> compiles project into WAR file">
