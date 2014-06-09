@@ -35,6 +35,8 @@ import eu.wltr.riker.utils.httperror.Http404NotFound;
 @RequestMapping("login/{providerName}/")
 public class LoginController {
 
+	private static final String SUCCESS_REDIRECT = "redirect:/";
+
 	@Autowired
 	private AuthBo bo;
 
@@ -46,10 +48,28 @@ public class LoginController {
 
 	}
 
+	private String getCallbackUri(String providerName) {
+		return new StringBuilder().append(request.getScheme()).append("://")
+				.append(request.getServerName()).append(":")
+				.append(request.getServerPort()).append("/api/login/")
+				.append(providerName).append("/callback/").toString();
+
+	}
+
+	private OAuthProviders.Provider getProvider(String name) {
+		OAuthProviders.Provider provider = bo.getProvider(name);
+
+		if (provider == null)
+			throw new Http404NotFound("Provider not found.");
+
+		return provider;
+
+	}
+
 	private Cookie createCookie(String name, String value, DateTime expires) {
 		Cookie c = new Cookie(name, value);
 		c.setPath("/");
-		
+
 		long exireyMillis = expires.getMillis() - DateTime.now().getMillis();
 		c.setMaxAge((int) (exireyMillis / 1000));
 
@@ -57,16 +77,12 @@ public class LoginController {
 
 	}
 
-	private String getSuccessUri() {
-		return "/";
-
-	}
-
-	private String getCallbackUri(String providerName) {
-		return new StringBuilder().append(request.getScheme()).append("://")
-				.append(request.getServerName()).append(":")
-				.append(request.getServerPort()).append("/api/login/")
-				.append(providerName).append("/callback/").toString();
+	private void setSessionCookies(HttpServletResponse response,
+			Session session, String secret) {
+		response.addCookie(createCookie("session_id", session.getToken()
+				.toString(), session.getExpires()));
+		response.addCookie(createCookie("session_secret", secret,
+				session.getExpires()));
 
 	}
 
@@ -77,16 +93,17 @@ public class LoginController {
 			@CookieValue(value = "session_secret", required = false) String secret)
 			throws OAuthSystemException {
 
-		User user = bo.getUserBySession(sid);
-		Session session = bo.getSession(user, sid);
+		if (bo.verifySession(sid, secret))
+			return SUCCESS_REDIRECT;
 
-		if (bo.verifySession(session, secret))
-			return redirect(getSuccessUri());
+		return redirect(generateOAuthRedirectUri(providerName));
 
-		OAuthProviders.Provider provider = bo.getProvider(providerName);
+	}
 
-		if (provider == null)
-			throw new Http404NotFound("Provider not found.");
+	private String generateOAuthRedirectUri(String providerName)
+			throws OAuthSystemException {
+
+		OAuthProviders.Provider provider = getProvider(providerName);
 
 		OAuthClientRequest request = OAuthClientRequest
 				.authorizationLocation(provider.authorizationEndpoint)
@@ -97,7 +114,7 @@ public class LoginController {
 				// .setState("abc") // TODO
 				.buildQueryMessage();
 
-		return redirect(request.getLocationUri());
+		return request.getLocationUri();
 
 	}
 
@@ -105,24 +122,8 @@ public class LoginController {
 	public String getCallback(@PathVariable String providerName,
 			HttpServletRequest request, HttpServletResponse response)
 			throws OAuthProblemException, OAuthSystemException {
-		OAuthProviders.Provider provider = bo.getProvider(providerName);
-
-		OAuthAuthzResponse oar = OAuthAuthzResponse
-				.oauthCodeAuthzResponse(request);
-		OAuthClientRequest crequest = OAuthClientRequest
-				.tokenLocation(provider.tokenEndpoint)
-				.setClientId(provider.clientId)
-				.setClientSecret(provider.clientSecret)
-				.setRedirectURI(getCallbackUri(providerName))
-				.setCode(oar.getCode())
-				.setGrantType(GrantType.AUTHORIZATION_CODE).buildBodyMessage();
-		OAuthClient client = new OAuthClient(new URLConnectionClient());
-		OAuthAccessTokenResponse oauthResponse = client.accessToken(crequest,
-				OpenIdConnectResponse.class);
-		OpenIdConnectResponse openIdConnectResponse = ((OpenIdConnectResponse) oauthResponse);
-
-		JWT idToken = openIdConnectResponse.getIdToken();
-		String subject = idToken.getClaimsSet().getSubject();
+		JWT token = requestOauthToken(request, providerName);
+		String subject = token.getClaimsSet().getSubject();
 
 		User user = bo.getUserByLogin(Provider.Google, subject);
 
@@ -135,12 +136,35 @@ public class LoginController {
 		String secret = bo.generateSessionSecret();
 		Session session = bo.createSession(user, secret);
 
-		response.addCookie(createCookie("session_id", session.getToken()
-				.toString(), session.getExpires()));
-		response.addCookie(createCookie("session_secret", secret,
-				session.getExpires()));
+		setSessionCookies(response, session, secret);
 
-		return redirect(getSuccessUri());
+		return SUCCESS_REDIRECT;
+
+	}
+
+	private JWT requestOauthToken(HttpServletRequest request,
+			String providerName) throws OAuthSystemException,
+			OAuthProblemException {
+
+		OAuthProviders.Provider provider = getProvider(providerName);
+
+		OAuthAuthzResponse oar = OAuthAuthzResponse
+				.oauthCodeAuthzResponse(request);
+
+		OAuthClientRequest crequest = OAuthClientRequest
+				.tokenLocation(provider.tokenEndpoint)
+				.setClientId(provider.clientId)
+				.setClientSecret(provider.clientSecret)
+				.setRedirectURI(getCallbackUri(providerName))
+				.setCode(oar.getCode())
+				.setGrantType(GrantType.AUTHORIZATION_CODE).buildBodyMessage();
+
+		OAuthClient client = new OAuthClient(new URLConnectionClient());
+		OAuthAccessTokenResponse oauthResponse = client.accessToken(crequest,
+				OpenIdConnectResponse.class);
+		OpenIdConnectResponse openIdConnectResponse = ((OpenIdConnectResponse) oauthResponse);
+
+		return openIdConnectResponse.getIdToken();
 
 	}
 

@@ -110,6 +110,14 @@ public class AuthBo {
 
 	}
 
+	public boolean verifySession(String sid, String secret) {
+		User user = getUserBySession(sid);
+		Session session = getSession(user, sid);
+
+		return verifySession(session, secret);
+		
+	}
+
 	public OAuthProviders.Provider getProvider(String name) {
 		OAuthProviders providers = metaDto.get(OAuthProviders.class);
 

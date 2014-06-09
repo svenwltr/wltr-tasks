@@ -1,10 +1,8 @@
 package eu.wltr.riker.utils;
 
-
 import java.math.BigInteger;
 
 import org.bson.types.ObjectId;
-
 
 public class ConverterUtils {
 
@@ -17,20 +15,20 @@ public class ConverterUtils {
 
 	private static int charToInt(char c) {
 		int i = 0;
-	
+
 		if (Character.isUpperCase(c))
 			i += 26;
-	
+
 		return i + Character.getNumericValue(c);
-	
+
 	}
 
 	public static String integerToString(BigInteger value) {
 		StringBuilder s = new StringBuilder();
 
 		while (value.bitLength() > 0) {
-			BigInteger[] result = value
-					.divideAndRemainder(BigInteger.valueOf(62));
+			BigInteger[] result = value.divideAndRemainder(BigInteger
+					.valueOf(62));
 			value = result[0];
 
 			char c = intToChar(result[1].intValue());
@@ -58,7 +56,7 @@ public class ConverterUtils {
 
 	public static String objectIdToString(ObjectId oid) {
 		return integerToString(new BigInteger(oid.toByteArray()));
-	
+
 	}
 
 	public static ObjectId objectIdFromString(String value) {
